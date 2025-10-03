@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     verifyUser();
-  }, []);
+  }, [isLoading]);
 
   const logout = async () => {
     toast.loading("Logging out...", { id: "logout" });
@@ -42,6 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: !!user,
     user,
     isLoading,
+    setIsLoading,
     logout,
   };
 

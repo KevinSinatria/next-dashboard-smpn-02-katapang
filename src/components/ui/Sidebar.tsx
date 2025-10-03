@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import {
   LogOut,
   UserLock,
+  Users,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,11 +19,13 @@ interface NavItem {
 
 const iconMap = {
   Roles: <UserLock size={18} />,
+  Personnels: <Users size={18} />,
 };
 
 const navItems: NavItem[] = [
   // { name: "Beranda", path: "/dashboard", role: ["admin"] },
-  { name: "Roles", path: "/roles", role: ["admin", "kesiswaan"] },
+  { name: "Roles", path: "/roles", role: ["admin"] },
+  { name: "Personnels", path: "/personnels", role: ["admin"] },
 ];
 
 const Sidebar = ({
@@ -56,7 +59,7 @@ const Sidebar = ({
     setIsAccessible(
       navItems.filter((item) => {
         for (const role of user!.role) {
-          if (item.role?.includes(role)) {
+          if (item.role?.includes(role.toLowerCase())) {
             return true;
           }
           return false;
@@ -83,7 +86,7 @@ const Sidebar = ({
           alt="Logo"
           className="rounded-lg w-9 h-9"
         />
-        <span className="font-semibold text-lg tracking-wide">SMPN 2 Katapang</span>
+        <span className="font-semibold text-lg tracking-wide">Portal Dukat</span>
       </div>
 
       {/* Menu */}
