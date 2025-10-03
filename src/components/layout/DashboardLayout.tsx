@@ -2,6 +2,14 @@ import { useState } from "react";
 import Sidebar from "../ui/Sidebar";
 import { HeaderProvider, useHeader } from "@/contexts/HeaderContext";
 import ProtectedPage from "@/features/auth/components/ProtectedPage";
+import { Quicksand } from "next/font/google";
+
+const quickSand = Quicksand({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-quicksand",
+  display: "swap",
+});
 
 function DynamicHeader({ toggleSidebar }: { toggleSidebar: () => void }) {
   const { title } = useHeader();
@@ -41,7 +49,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       <HeaderProvider>
         <div
           suppressHydrationWarning
-          className="flex h-screen bg-gray-50 text-gray-950"
+          className={`${quickSand.className} flex h-screen bg-gray-50 text-gray-950`}
         >
           <Sidebar
             isOpen={isSidebarOpen}

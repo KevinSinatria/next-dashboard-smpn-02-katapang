@@ -5,8 +5,9 @@ export interface User {
 }
 
 export interface AuthContextType {
-    isAuthenticated: boolean;
-    user: User | null;
-    isLoading: boolean;
-    logout: () => void;
+  isAuthenticated: boolean;
+  user: User | null;
+  isLoading: boolean;
+  setIsLoading: (isLoading: (prev: boolean) => boolean) => void;
+  logout: () => void;
 }

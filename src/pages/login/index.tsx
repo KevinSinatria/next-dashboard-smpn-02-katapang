@@ -4,6 +4,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { LoginForm } from "@/features/auth/components/LoginForm";
 import { Quicksand } from "next/font/google";
+import { useEffect } from "react";
+import { useAuth } from "@/features/auth/context/AuthContext";
+import { useRouter } from "next/router";
 
 const quickSand = Quicksand({
   subsets: ["latin"],
@@ -13,6 +16,13 @@ const quickSand = Quicksand({
 });
 
 export default function LoginPage() {
+  const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      router.push("/dashboard/roles");
+    }
+  }, [isAuthenticated, isLoading, router]);
   return (
     <div
       className={`${quickSand.className} min-h-screen flex items-center justify-center bg-gray-300 p-4`}

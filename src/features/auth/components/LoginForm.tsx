@@ -17,6 +17,7 @@ import z from "zod";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { useRouter } from "next/router";
+import { useAuth } from "../context/AuthContext";
 
 const formSchema = z.object({
   username: z.string().min(1, {
@@ -38,28 +39,33 @@ export function LoginForm() {
     },
   });
   const [isOpenPassword, setIsOpenPassword] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingForm, setIsLoadingForm] = useState<boolean>(false);
+  const { setIsLoading, isLoading } = useAuth();
 
   const router = useRouter();
 
   const onSubmit = async (data: LoginFormData) => {
-    setIsLoading(true);
+    setIsLoadingForm(true);
+    setIsLoading((prev: boolean) => !prev);
 
     try {
       const response = await apiClient.post("/auth/login", data);
 
       if (response.data.success) {
         const { user } = response.data;
-        localStorage.setItem("user", JSON.stringify(user));
+        // localStorage.setItem("user", JSON.stringify(user));
         toast.success(`Berhasil masuk dengan username ${user.username}`);
-        router.push("/dashboard");
+        setIsLoading((prev: boolean) => !prev);
+        if (!isLoading) {
+          router.push("/dashboard/roles");
+        }
       }
     } catch (error) {
       if (error instanceof AxiosError) {
         toast.error(error.response?.data.message);
       }
     } finally {
-      setIsLoading(false);
+      setIsLoadingForm(false);
     }
   };
 
@@ -118,9 +124,13 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button className="mt-4 flex gap-2" type="submit" disabled={isLoading}>
-          {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-          {isLoading ? "Memproses..." : "Masuk"}
+        <Button
+          className="mt-4 flex gap-2"
+          type="submit"
+          disabled={isLoadingForm}
+        >
+          {isLoadingForm && <Loader2 className="w-4 h-4 animate-spin" />}
+          {isLoadingForm ? "Memproses..." : "Masuk"}
         </Button>
       </form>
     </Form>
