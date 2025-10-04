@@ -5,6 +5,7 @@ import {
   GraduationCap,
   Images,
   LogOut,
+  Tag,
   UserLock,
   Users,
 } from "lucide-react";
@@ -24,6 +25,7 @@ const iconMap = {
   Personil: <Users size={18} />,
   "Kepala Sekolah": <GraduationCap size={18} />,
   "Album Galeri": <Images size={18} />,
+  "Kategori Artikel": <Tag size={18} />
 };
 
 const navItems: NavItem[] = [
@@ -32,6 +34,7 @@ const navItems: NavItem[] = [
   { name: "Personil", path: "/dashboard/personnels", role: ["admin"] },
   { name: "Kepala Sekolah", path: "/dashboard/headmasters", role: ["admin"] },
   { name: "Album Galeri", path: "/dashboard/gallery-albums", role: ["admin"] },
+  { name: "Kategori Artikel", path: "/dashboard/article-categories", role: ["admin"] },
 ];
 
 const Sidebar = ({
