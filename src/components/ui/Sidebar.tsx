@@ -24,8 +24,8 @@ const iconMap = {
 
 const navItems: NavItem[] = [
   // { name: "Beranda", path: "/dashboard", role: ["admin"] },
-  { name: "Roles", path: "/roles", role: ["admin"] },
-  { name: "Personnels", path: "/personnels", role: ["admin"] },
+  { name: "Roles", path: "/dashboard/roles", role: ["admin"] },
+  { name: "Personnels", path: "/dashboard/personnels", role: ["admin"] },
 ];
 
 const Sidebar = ({

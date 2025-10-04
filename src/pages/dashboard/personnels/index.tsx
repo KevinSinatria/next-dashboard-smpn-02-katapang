@@ -1,25 +1,25 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useHeader } from "@/contexts/HeaderContext";
-import { RolesDataTable } from "@/features/roles/components/RolesDataTable";
+import { PersonnelsDataTable } from "@/features/personnels/components/PersonnelsDataTable";
 import { useEffect } from "react";
 
-function RolesContent() {
+function PersonnelsContent() {
   const { setTitle } = useHeader();
-
   useEffect(() => {
-    setTitle("Kelola Roles");
+    setTitle("Kelola Personil");
   }, [setTitle]);
+
   return (
     <div>
-      <RolesDataTable />
+      <PersonnelsDataTable />
     </div>
   );
 }
 
-export default function RolesPage() {
+export default function PersonnelsPage() {
   return (
     <DashboardLayout>
-      <RolesContent />
+      <PersonnelsContent />
     </DashboardLayout>
   );
 }
