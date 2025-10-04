@@ -8,12 +8,14 @@ interface ImageDropzoneProps {
   onChange: (file: File | null) => void;
   className?: string;
   initialPreviewUrl?: string | null;
+  readOnly?: boolean
 }
 
 export function ImageDropzone({
   onChange,
   className,
   initialPreviewUrl,
+  readOnly
 }: ImageDropzoneProps) {
   const [preview, setPreview] = useState<string | null>(
     initialPreviewUrl || null
@@ -68,7 +70,7 @@ export function ImageDropzone({
     <div
       className={cn(
         "relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer transition-colors duration-200 ease-in-out",
-        "hover:border-primary hover:bg-primary/5",
+        !readOnly && "hover:border-primary hover:bg-primary/5",
         isDragging && "border-primary bg-primary/10",
         preview && "border-solid p-0", // Hilangkan padding jika ada preview
         className
@@ -86,6 +88,7 @@ export function ImageDropzone({
         }
         className="hidden"
         accept="image/png, image/jpeg, image/jpg, image/webp"
+        disabled={readOnly}
       />
 
       {preview ? (
@@ -97,7 +100,7 @@ export function ImageDropzone({
             width={256}
             height={256}
           />
-          <Button
+          {!readOnly && <Button
             type="button"
             variant="destructive"
             size="icon"
@@ -108,7 +111,7 @@ export function ImageDropzone({
             }}
           >
             <X className="h-4 w-4" />
-          </Button>
+          </Button>}
         </>
       ) : (
         <div className="flex flex-col items-center justify-center space-y-2 text-gray-500">

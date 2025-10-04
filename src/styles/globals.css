@@ -132,4 +132,10 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  html,
+  body,
+  #__next {
+    max-height: 100%;
+    overflow: hidden;
+  }
 }
