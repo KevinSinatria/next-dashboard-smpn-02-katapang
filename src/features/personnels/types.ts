@@ -7,10 +7,14 @@ export interface PersonnelType {
   updated_at: string;
 }
 
+export interface RolePersonnelType {
+  personnel_role_id: number;
+  role_id: number;
+  role: string;
+  subject: string | null;
+  position: string | null;
+}
+
 export interface PersonnelDetailType extends PersonnelType {
-  roles: {
-    role: string;
-    subject: string | null;
-    position: string | null;
-  }[];
+  roles: RolePersonnelType[];
 }
