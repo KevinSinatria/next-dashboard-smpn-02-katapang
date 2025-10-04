@@ -163,7 +163,7 @@ function RoleFormDialog({
                   <FormLabel>Role</FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(parseInt(value))}
-                    defaultValue={String(field.value)}
+                    defaultValue={field.value ? String(field.value) : undefined}
                     disabled={isSubmitting}
                   >
                     <FormControl>

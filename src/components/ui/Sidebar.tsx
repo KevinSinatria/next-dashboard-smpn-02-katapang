@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import {
+  GraduationCap,
   LogOut,
   UserLock,
   Users,
@@ -19,13 +20,15 @@ interface NavItem {
 
 const iconMap = {
   Roles: <UserLock size={18} />,
-  Personnels: <Users size={18} />,
+  Personil: <Users size={18} />,
+  "Kepala Sekolah": <GraduationCap size={18} />,
 };
 
 const navItems: NavItem[] = [
   // { name: "Beranda", path: "/dashboard", role: ["admin"] },
   { name: "Roles", path: "/dashboard/roles", role: ["admin"] },
-  { name: "Personnels", path: "/dashboard/personnels", role: ["admin"] },
+  { name: "Personil", path: "/dashboard/personnels", role: ["admin"] },
+  { name: "Kepala Sekolah", path: "/dashboard/headmasters", role: ["admin"] },
 ];
 
 const Sidebar = ({
