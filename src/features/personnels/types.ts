@@ -6,3 +6,11 @@ export interface PersonnelType {
   created_at: string;
   updated_at: string;
 }
+
+export interface PersonnelDetailType extends PersonnelType {
+  roles: {
+    role: string;
+    subject: string | null;
+    position: string | null;
+  }[];
+}

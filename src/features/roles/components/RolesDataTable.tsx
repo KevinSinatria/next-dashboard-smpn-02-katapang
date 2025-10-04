@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useRoles } from "../hooks/useRoles";
 import { useEffect, useState } from "react";
-import { Loader2, MoreHorizontal, Plus, Search } from "lucide-react";
+import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -128,7 +128,7 @@ export function RolesDataTable() {
           {!isLoading && roles!.length === 0 && !searchTerm ? (
             <TableRow className="text-sm">
               <TableCell colSpan={12} className="text-center h-24">
-                Tidak ada data pelanggaran.
+                Tidak ada data roles.
               </TableCell>
             </TableRow>
           ) : !isLoading && roles!.length === 0 && searchTerm ? (

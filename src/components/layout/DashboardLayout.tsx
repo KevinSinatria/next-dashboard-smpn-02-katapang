@@ -49,7 +49,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       <HeaderProvider>
         <div
           suppressHydrationWarning
-          className={`${quickSand.className} flex h-screen bg-gray-50 text-gray-950`}
+          className={`${quickSand.className} flex max-h-screen overflow-y-hidden bg-gray-50 text-gray-950`}
         >
           <Sidebar
             isOpen={isSidebarOpen}
