@@ -7,6 +7,7 @@ export interface GalleryAlbumType {
 }
 
 export interface GalleryPhotoType {
+  id: number;
   photo_url: string;
 }
 
