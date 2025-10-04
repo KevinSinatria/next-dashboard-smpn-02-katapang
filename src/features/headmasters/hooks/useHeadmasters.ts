@@ -1,10 +1,10 @@
-import { Meta } from "@/types/metaTypes";
-import { PersonnelType } from "../types";
-import useSWR from "swr";
-import { fetcher } from "@/lib/fetcher";
 import { SWRHooksQueryParams } from "@/types";
+import { HeadmasterType } from "../types";
+import { Meta } from "@/types/metaTypes";
+import { fetcher } from "@/lib/fetcher";
+import useSWR from "swr";
 
-export function usePersonnels(queryParams?: SWRHooksQueryParams) {
+export function useHeadmasters(queryParams?: SWRHooksQueryParams) {
   const params = new URLSearchParams();
   if (queryParams?.page) params.append("page", queryParams.page.toString());
   if (queryParams?.limit) params.append("limit", queryParams.limit.toString());
@@ -12,15 +12,15 @@ export function usePersonnels(queryParams?: SWRHooksQueryParams) {
     params.append("search", queryParams.search.toString());
 
   const queryString = params.toString();
-  const swrKey = `/personnel${queryString ? `?${queryString}` : ""}`;
+  const swrKey = `/headmasters${queryString ? `?${queryString}` : ""}`;
 
   const { data, error, isLoading, mutate } = useSWR<{
-    data: PersonnelType[];
+    data: HeadmasterType[];
     meta: Meta;
   }>(swrKey, fetcher);
 
   return {
-    personnels: data?.data,
+    headmasters: data?.data,
     meta: data?.meta,
     isLoading,
     error,
