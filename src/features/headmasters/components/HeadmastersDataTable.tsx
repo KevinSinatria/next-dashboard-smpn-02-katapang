@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { usePersonnels } from "../hooks/usePersonnels";
+import { useHeadmasters } from "../hooks/useHeadmasters";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/apiClient";
 import { MoreHorizontal, Plus, Search } from "lucide-react";
@@ -37,23 +37,23 @@ import {
 } from "@/components/ui/alert-dialog";
 import Image from "next/image";
 
-export function PersonnelsDataTable() {
+export function HeadmastersDataTable() {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [searchDebounced] = useDebounce(searchTerm, 500);
   const router = useRouter();
 
-  const { personnels, meta, isLoading, mutate } = usePersonnels({
+  const { headmasters, meta, isLoading, mutate } = useHeadmasters({
     page,
     search: searchDebounced,
   });
 
   useEffect(() => {
     if (isLoading) {
-      toast.loading("Memuat data...", { id: "personnels" });
+      toast.loading("Memuat data...", { id: "headmasters" });
     } else {
-      toast.dismiss("personnels");
+      toast.dismiss("headmasters");
     }
   }, [isLoading]);
 
@@ -62,23 +62,17 @@ export function PersonnelsDataTable() {
     setPage(1);
   };
 
-  const handleDeletePersonnel = async (id: number) => {
+  const handleDeleteHeadmaster = async (id: number) => {
     try {
-      await apiClient.delete(`/personnel/${id}`);
+      await apiClient.delete(`/headmasters/${id}`);
 
       mutate();
-      toast.success("Berhasil menghapus personnel");
+      toast.success("Berhasil menghapus kepala sekolah");
     } catch (error) {
       console.log(error);
-      toast.error("Gagal menghapus personnel");
+      toast.error("Gagal menghapus kepala sekolah");
     }
   };
-
-  //   if (isLoading) {
-  //     return toast.loading("Memuat data...", { id: "personnels" });
-  //   } else {
-  //     toast.dismiss("personnels");
-  //   }
 
   return (
     <>
@@ -87,7 +81,7 @@ export function PersonnelsDataTable() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
           <Input
             type="search"
-            placeholder="Cari berdasarkan nama personil..."
+            placeholder="Cari berdasarkan nama kepala sekolah..."
             className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-white shadow-sm
                focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 
                transition-all duration-200 placeholder:text-gray-400"
@@ -100,7 +94,7 @@ export function PersonnelsDataTable() {
             className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center text-sm gap-2"
             asChild
           >
-            <Link href="/dashboard/personnels/new">
+            <Link href="/dashboard/headmasters/new">
               <Plus />
               Buat Data
             </Link>
@@ -126,24 +120,23 @@ export function PersonnelsDataTable() {
             </TableHead>
             <TableHead className="font-semibold">Nama</TableHead>
             <TableHead className="font-semibold">Foto Profil</TableHead>
+            <TableHead className="font-semibold">Periode Tahun</TableHead>
             <TableHead className="font-semibold">Status Aktif</TableHead>
-            <TableHead className="font-semibold">Dibuat Pada</TableHead>
-            <TableHead className="font-semibold">Diperbarui Pada</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {personnels &&
+          {headmasters &&
           !isLoading &&
-          personnels!.length === 0 &&
+          headmasters!.length === 0 &&
           !searchTerm ? (
             <TableRow className="text-sm">
               <TableCell colSpan={12} className="text-center h-24">
-                Tidak ada data roles.
+                Tidak ada data kepala sekolah.
               </TableCell>
             </TableRow>
-          ) : personnels &&
+          ) : headmasters &&
             !isLoading &&
-            personnels!.length === 0 &&
+            headmasters!.length === 0 &&
             searchTerm ? (
             <TableRow className="text-sm">
               <TableCell colSpan={12} className="text-center h-24">
@@ -152,18 +145,18 @@ export function PersonnelsDataTable() {
               </TableCell>
             </TableRow>
           ) : (
-            personnels &&
+            headmasters &&
             !isLoading &&
-            personnels!.map((personnel) => (
+            headmasters!.map((headmaster) => (
               <TableRow
-                key={personnel.id}
+                key={headmaster.id}
                 className={`hover:bg-gray-50 text-sm`}
               >
                 <TableCell>
                   <DropdownMenu
-                    open={openMenuId === personnel.id}
+                    open={openMenuId === headmaster.id}
                     onOpenChange={(open) =>
-                      open ? setOpenMenuId(personnel.id) : setOpenMenuId(null)
+                      open ? setOpenMenuId(headmaster.id) : setOpenMenuId(null)
                     }
                   >
                     <DropdownMenuTrigger asChild>
@@ -177,9 +170,7 @@ export function PersonnelsDataTable() {
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() =>
-                          router.push(
-                            `/dashboard/personnels/${personnel.id}`
-                          )
+                          router.push(`/dashboard/headmasters/${headmaster.id}`)
                         }
                       >
                         Lihat Detail
@@ -188,7 +179,7 @@ export function PersonnelsDataTable() {
                         className="cursor-pointer"
                         onClick={() =>
                           router.push(
-                            `/dashboard/personnels/${personnel.id}/edit`
+                            `/dashboard/headmasters/${headmaster.id}/edit`
                           )
                         }
                       >
@@ -217,7 +208,7 @@ export function PersonnelsDataTable() {
                             <AlertDialogCancel>Batal</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() =>
-                                handleDeletePersonnel(personnel.id)
+                                handleDeleteHeadmaster(headmaster.id)
                               }
                               className="bg-red-600 hover:bg-red-700"
                             >
@@ -230,32 +221,27 @@ export function PersonnelsDataTable() {
                   </DropdownMenu>
                 </TableCell>
                 <TableCell className="hidden font-medium sm:table-cell">
-                  {personnel.id}
+                  {headmaster.id}
                 </TableCell>
-                <TableCell>{personnel.name}</TableCell>
+                <TableCell>{headmaster.name}</TableCell>
                 <TableCell>
                   <Image
-                    src={personnel.image_url}
-                    alt={personnel.name}
+                    src={headmaster.image_url}
+                    alt={headmaster.name}
                     width={100}
                     height={100}
                     className="w-12 h-12 object-cover rounded-full"
                   />
                 </TableCell>
+                <TableCell>{`${headmaster.start_year} - ${headmaster.end_year}`}</TableCell>
                 <TableCell>
                   <span
                     className={`${
-                      personnel.active ? "bg-green-600" : "bg-red-600"
+                      headmaster.is_active ? "bg-green-600" : "bg-red-600"
                     } text-white px-2 py-1 rounded`}
                   >
-                    {personnel.active ? "Aktif" : "Tidak Aktif"}
+                    {headmaster.is_active ? "Aktif" : "Tidak Aktif"}
                   </span>
-                </TableCell>
-                <TableCell>
-                  {new Date(personnel.created_at).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  {new Date(personnel.updated_at).toLocaleDateString()}
                 </TableCell>
               </TableRow>
             ))
