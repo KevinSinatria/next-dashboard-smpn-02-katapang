@@ -100,8 +100,7 @@ export function PersonnelForm({ initialData, readOnly }: PersonnelFormProps) {
 
     try {
       if (isEditMode) {
-        formData.append("_method", "PUT");
-        await apiClient.post(`/personnel/${initialData.id}`, formData, {
+        await apiClient.put(`/personnel/${initialData.id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -134,7 +133,7 @@ export function PersonnelForm({ initialData, readOnly }: PersonnelFormProps) {
     <Card>
       <CardHeader>
         <CardTitle>
-          {isEditMode ? "Edit Personil" : "Tambah Personil"}
+          {isEditMode && !isReadOnly ? "Edit Personil" : isReadOnly ? "Detail Personil" : "Tambah Personil"}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -167,6 +166,7 @@ export function PersonnelForm({ initialData, readOnly }: PersonnelFormProps) {
                     <ImageDropzone
                       onChange={field.onChange}
                       initialPreviewUrl={initialData?.image_url}
+                      readOnly={isReadOnly || isSubmitting}
                     />
                   </FormControl>
                   <FormMessage />
