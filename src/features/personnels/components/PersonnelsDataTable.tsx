@@ -178,6 +178,16 @@ export function PersonnelsDataTable() {
                         className="cursor-pointer"
                         onClick={() =>
                           router.push(
+                            `/dashboard/personnels/${personnel.id}`
+                          )
+                        }
+                      >
+                        Lihat Detail
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() =>
+                          router.push(
                             `/dashboard/personnels/${personnel.id}/edit`
                           )
                         }
