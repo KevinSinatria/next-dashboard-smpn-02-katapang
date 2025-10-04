@@ -9,7 +9,7 @@ interface GalleryAlbumDetailPageProps {
   galleryAlbum: GalleryAlbumDetailType;
 }
 
-export default function GalleryAlbumDetailPage({
+export default function GalleryAlbumEditPage({
   galleryAlbum,
 }: GalleryAlbumDetailPageProps) {
   const breadcrumbItems = [
