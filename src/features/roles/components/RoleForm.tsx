@@ -22,18 +22,18 @@ const roleSchema = z.object({
   name: z.string(),
 });
 
-type roleType = z.infer<typeof roleSchema>;
+type RoleTypeForm = z.infer<typeof roleSchema>;
 
 interface RoleFormProps {
   initialData?: {
     id: number;
-    name: roleType["name"];
+    name: RoleTypeForm["name"];
   } | null;
 }
 
 export function RoleForm({ initialData }: RoleFormProps) {
   const router = useRouter();
-  const form = useForm<roleType>({
+  const form = useForm<RoleTypeForm>({
     resolver: zodResolver(roleSchema),
     defaultValues: {
       name: "",
@@ -54,7 +54,7 @@ export function RoleForm({ initialData }: RoleFormProps) {
     }
   }, [form, initialData, isEditMode]);
 
-  const onSubmit = async (data: roleType) => {
+  const onSubmit = async (data: RoleTypeForm) => {
     try {
       let response;
       if (isEditMode) {
