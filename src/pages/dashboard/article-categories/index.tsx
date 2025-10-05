@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useHeader } from "@/contexts/HeaderContext";
 import { ArticleCategoriesDataTable } from "@/features/article-categories/components/ArticleCategoriesDataTable";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 function ArticleCategoriesContent() {
   const { setTitle } = useHeader();
@@ -19,8 +19,14 @@ function ArticleCategoriesContent() {
 
 export default function ArticleCategoriesPage() {
   return (
-    <DashboardLayout>
-      <ArticleCategoriesContent />
-    </DashboardLayout>
+    <ArticleCategoriesContent />
   );
 }
+
+ArticleCategoriesPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};

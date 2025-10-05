@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useHeader } from "@/contexts/HeaderContext";
 import { PersonnelsDataTable } from "@/features/personnels/components/PersonnelsDataTable";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 function PersonnelsContent() {
   const { setTitle } = useHeader();
@@ -18,8 +18,14 @@ function PersonnelsContent() {
 
 export default function PersonnelsPage() {
   return (
-    <DashboardLayout>
-      <PersonnelsContent />
-    </DashboardLayout>
+    <PersonnelsContent />
   );
 }
+
+PersonnelsPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};
