@@ -115,7 +115,7 @@ export function ArticleCategoryForm({ initialData }: ArticleCategoryFormProps) {
               <Button
                 className="flex gap-2 items-center"
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !isEditMode }
               >
                 {isSubmitting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
