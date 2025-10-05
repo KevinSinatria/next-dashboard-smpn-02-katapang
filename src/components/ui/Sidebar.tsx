@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import {
+  ChartColumn,
   GraduationCap,
   Images,
   LogOut,
@@ -28,6 +29,7 @@ const iconMap = {
   "Album Galeri": <Images size={18} />,
   "Kategori Artikel": <Tag size={18} />,
   "Informasi Sekolah": <School size={18} />,
+  "Statistik Sekolah": <ChartColumn size={18} />,
 };
 
 const navItems: NavItem[] = [
@@ -44,6 +46,11 @@ const navItems: NavItem[] = [
   {
     name: "Informasi Sekolah",
     path: "/dashboard/school-informations",
+    role: ["admin"],
+  },
+  {
+    name: "Statistik Sekolah",
+    path: "/dashboard/school-stats",
     role: ["admin"],
   },
 ];
