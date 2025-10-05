@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useHeader } from "@/contexts/HeaderContext";
 import { GalleryAlbumsDataTable } from "@/features/gallery-albums/components/GalleryAlbumsDataTable";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 function GalleryAlbumsContent() {
   const { setTitle } = useHeader();
@@ -18,8 +18,14 @@ function GalleryAlbumsContent() {
 
 export default function GalleryAlbumsPage() {
   return (
-    <DashboardLayout>
-      <GalleryAlbumsContent />
-    </DashboardLayout>
+    <GalleryAlbumsContent />
   );
 }
+
+GalleryAlbumsPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};

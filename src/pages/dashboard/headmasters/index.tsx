@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useHeader } from "@/contexts/HeaderContext";
 import { HeadmastersDataTable } from "@/features/headmasters/components/HeadmastersDataTable";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 function HeadmastersContent() {
   const { setTitle } = useHeader();
@@ -18,8 +18,14 @@ function HeadmastersContent() {
 
 export default function HeadmastersPage() {
   return (
-    <DashboardLayout>
-      <HeadmastersContent />
-    </DashboardLayout>
+    <HeadmastersContent />
   );
 }
+
+HeadmastersPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};

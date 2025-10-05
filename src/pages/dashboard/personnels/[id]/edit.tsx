@@ -58,7 +58,7 @@ import { apiClient } from "@/lib/apiClient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircle, Trash, Edit } from "lucide-react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -299,9 +299,7 @@ export default function EditPersonnelPage({
 
   if (!personnel) {
     return (
-      <DashboardLayout>
-        <div>Loading personnel data...</div>
-      </DashboardLayout>
+      <div>Loading personnel data...</div>
     );
   }
 
@@ -313,93 +311,91 @@ export default function EditPersonnelPage({
 
   return (
     <ProtectedPage>
-      <DashboardLayout>
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="mt-6">
-          <PersonnelForm initialData={personnel} />
-        </div>
-        <div className="mt-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Daftar Role</CardTitle>
-              <Button onClick={handleAddNewRole}>
-                <PlusCircle className="mr-2 h-4 w-4" /> Tambah Role
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow className="uppercase">
-                    <TableHead>No</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Detail</TableHead>
-                    <TableHead className="text-right">Aksi</TableHead>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className="mt-6">
+        <PersonnelForm initialData={personnel} />
+      </div>
+      <div className="mt-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Daftar Role</CardTitle>
+            <Button onClick={handleAddNewRole}>
+              <PlusCircle className="mr-2 h-4 w-4" /> Tambah Role
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow className="uppercase">
+                  <TableHead>No</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Detail</TableHead>
+                  <TableHead className="text-right">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {personnel.roles.map((role, index) => (
+                  <TableRow key={role.personnel_role_id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{role.role}</TableCell>
+                    <TableCell>
+                      {role.subject && `Mapel: ${role.subject}`}
+                      {role.position && `Jabatan: ${role.position}`}
+                    </TableCell>
+                    <TableCell className="text-right space-x-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleEditRole(role)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="destructive" size="icon">
+                            <Trash className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Apakah Anda Yakin?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Aksi ini tidak dapat dibatalkan. Data yang sudah
+                              dihapus tidak akan bisa dikembalikan lagi.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Batal</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() =>
+                                handleDeleteRole(role.personnel_role_id)
+                              }
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Ya, Hapus
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {personnel.roles.map((role, index) => (
-                    <TableRow key={role.personnel_role_id}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{role.role}</TableCell>
-                      <TableCell>
-                        {role.subject && `Mapel: ${role.subject}`}
-                        {role.position && `Jabatan: ${role.position}`}
-                      </TableCell>
-                      <TableCell className="text-right space-x-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleEditRole(role)}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="destructive" size="icon">
-                              <Trash className="h-4 w-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Apakah Anda Yakin?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Aksi ini tidak dapat dibatalkan. Data yang sudah
-                                dihapus tidak akan bisa dikembalikan lagi.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Batal</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() =>
-                                  handleDeleteRole(role.personnel_role_id)
-                                }
-                                className="bg-red-600 hover:bg-red-700"
-                              >
-                                Ya, Hapus
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </div>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
 
-        <RoleFormDialog
-          isOpen={isDialogOpen}
-          setIsOpen={setIsDialogOpen}
-          personnelId={personnel.id}
-          personnelName={personnel.name}
-          initialData={editingRole}
-          onSuccess={handleSuccess}
-        />
-      </DashboardLayout>
+      <RoleFormDialog
+        isOpen={isDialogOpen}
+        setIsOpen={setIsDialogOpen}
+        personnelId={personnel.id}
+        personnelName={personnel.name}
+        initialData={editingRole}
+        onSuccess={handleSuccess}
+      />
     </ProtectedPage>
   );
 }
@@ -417,3 +413,12 @@ export async function getServerSideProps(context: { params: { id: string } }) {
     return { notFound: true };
   }
 }
+
+
+EditPersonnelPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};

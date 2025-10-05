@@ -4,6 +4,7 @@ import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { PersonnelForm } from "@/features/personnels/components/PersonnelForm";
 import { PersonnelDetailType } from "@/features/personnels/types";
 import { apiClient } from "@/lib/apiClient";
+import { ReactElement } from "react";
 
 interface PersonnelDetailPageProps {
     personnel: PersonnelDetailType;
@@ -18,12 +19,10 @@ export default function PersonnelDetailPage({ personnel }: PersonnelDetailPagePr
 
   return (
     <ProtectedPage>
-      <DashboardLayout>
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="mt-6">
-          <PersonnelForm initialData={personnel} readOnly={true} />
-        </div>
-      </DashboardLayout>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className="mt-6">
+        <PersonnelForm initialData={personnel} readOnly={true} />
+      </div>
     </ProtectedPage>
   );
 }
@@ -41,3 +40,11 @@ export async function getServerSideProps(context: { params: { id: string } }) {
     return { notFound: true };
   }
 }
+
+PersonnelDetailPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};

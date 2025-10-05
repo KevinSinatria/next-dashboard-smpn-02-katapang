@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useHeader } from "@/contexts/HeaderContext";
 import { SchoolStatsDataTable } from "@/features/school-stats/components/SchoolStatsDataTable";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 function SchoolStatsContent() {
   const { setTitle } = useHeader();
@@ -19,8 +19,14 @@ function SchoolStatsContent() {
 
 export default function SchoolStatsPage() {
   return (
-    <DashboardLayout>
-      <SchoolStatsContent />
-    </DashboardLayout>
+    <SchoolStatsContent />
   );
 }
+
+SchoolStatsPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};

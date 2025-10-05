@@ -1,7 +1,9 @@
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import ProtectedPage from "@/features/auth/components/ProtectedPage";
+import { AuthProvider } from "@/features/auth/context/AuthContext";
 import { SchoolStatForm } from "@/features/school-stats/components/SchoolStatForm";
+import { ReactElement } from "react";
 
 export default function NewSchoolStatPage() {
   const breadcrumbItems = [
@@ -9,15 +11,17 @@ export default function NewSchoolStatPage() {
     { label: "Statistik Sekolah", href: "/dashboard/school-stats" },
     { label: "Buat Baru" },
   ];
-  
+
   return (
     <ProtectedPage>
-      <DashboardLayout>
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="mt-6">
-          <SchoolStatForm />
-        </div>
-      </DashboardLayout>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className="mt-6">
+        <SchoolStatForm />
+      </div>
     </ProtectedPage>
   );
 }
+
+NewSchoolStatPage.getLayout = function getLayout(page: ReactElement) {
+  return <DashboardLayout>{page}</DashboardLayout>;
+};

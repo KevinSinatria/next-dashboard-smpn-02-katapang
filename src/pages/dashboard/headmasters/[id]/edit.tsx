@@ -4,6 +4,7 @@ import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { HeadmasterForm } from "@/features/headmasters/components/HeadmasterForm";
 import { HeadmasterDetailType } from "@/features/headmasters/types";
 import { apiClient } from "@/lib/apiClient";
+import { ReactElement } from "react";
 
 interface EditHeadmasterPageProps {
   headmaster: HeadmasterDetailType;
@@ -20,12 +21,10 @@ export default function EditHeadmasterPage({
 
   return (
     <ProtectedPage>
-      <DashboardLayout>
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="mt-6">
-          <HeadmasterForm initialData={headmaster} />
-        </div>
-      </DashboardLayout>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className="mt-6">
+        <HeadmasterForm initialData={headmaster} />
+      </div>
     </ProtectedPage>
   );
 }
@@ -43,3 +42,11 @@ export async function getServerSideProps(context: { params: { id: string } }) {
     return { notFound: true };
   }
 }
+
+EditHeadmasterPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};

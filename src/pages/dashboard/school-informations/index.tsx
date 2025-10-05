@@ -4,7 +4,7 @@ import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { SchoolInformationForm } from "@/features/school-information/components/SchoolInformationForm";
 import { SchoolInformationType } from "@/features/school-information/types";
 import { apiClient } from "@/lib/apiClient";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 
 interface SchoolInformationPageProps {
   schoolInformation: SchoolInformationType;
@@ -31,15 +31,13 @@ export default function SchoolInformationPage({
 
   return (
     <ProtectedPage>
-      <DashboardLayout>
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="mt-6">
-          <SchoolInformationForm
-            initialData={schoolInformationData}
-            refetch={fetchData}
-          />
-        </div>
-      </DashboardLayout>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className="mt-6">
+        <SchoolInformationForm
+          initialData={schoolInformationData}
+          refetch={fetchData}
+        />
+      </div>
     </ProtectedPage>
   );
 }
@@ -56,3 +54,11 @@ export async function getServerSideProps() {
     return { notFound: true };
   }
 }
+
+SchoolInformationPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};

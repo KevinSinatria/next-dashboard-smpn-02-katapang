@@ -4,6 +4,7 @@ import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { GalleryAlbumForm } from "@/features/gallery-albums/components/GalleryAlbumForm";
 import { GalleryAlbumDetailType } from "@/features/gallery-albums/types";
 import { apiClient } from "@/lib/apiClient";
+import { ReactElement } from "react";
 
 interface GalleryAlbumDetailPageProps {
   galleryAlbum: GalleryAlbumDetailType;
@@ -20,12 +21,10 @@ export default function GalleryAlbumEditPage({
 
   return (
     <ProtectedPage>
-      <DashboardLayout>
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="mt-6">
-          <GalleryAlbumForm initialData={galleryAlbum} />
-        </div>
-      </DashboardLayout>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className="mt-6">
+        <GalleryAlbumForm initialData={galleryAlbum} />
+      </div>
     </ProtectedPage>
   );
 }
@@ -43,3 +42,7 @@ export async function getServerSideProps(context: { params: { id: string } }) {
     return { notFound: true };
   }
 }
+
+GalleryAlbumEditPage.getLayout = function getLayout(page: ReactElement) {
+  return <DashboardLayout>{page}</DashboardLayout>;
+};
