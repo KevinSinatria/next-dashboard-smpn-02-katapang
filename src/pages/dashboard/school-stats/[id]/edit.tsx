@@ -4,6 +4,7 @@ import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { SchoolStatForm } from "@/features/school-stats/components/SchoolStatForm";
 import { SchoolStatType } from "@/features/school-stats/types";
 import { apiClient } from "@/lib/apiClient";
+import { ReactElement } from "react";
 
 interface EditSchoolStatPageProps {
   schoolStat: SchoolStatType;
@@ -18,12 +19,10 @@ export default function EditSchoolStatPage({ schoolStat }: EditSchoolStatPagePro
 
   return (
     <ProtectedPage>
-      <DashboardLayout>
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="mt-6">
-          <SchoolStatForm initialData={schoolStat} />
-        </div>
-      </DashboardLayout>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className="mt-6">
+        <SchoolStatForm initialData={schoolStat} />
+      </div>
     </ProtectedPage>
   );
 }
@@ -41,3 +40,11 @@ export async function getServerSideProps(context: { params: { id: string } }) {
     return { notFound: true };
   }
 }
+
+EditSchoolStatPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};

@@ -4,6 +4,7 @@ import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { RoleForm } from "@/features/roles/components/RoleForm";
 import { RoleType } from "@/features/roles/types";
 import { apiClient } from "@/lib/apiClient";
+import { ReactElement } from "react";
 
 interface EditRolePageProps {
   role: RoleType;
@@ -18,12 +19,10 @@ export default function EditRolePage({ role }: EditRolePageProps) {
 
   return (
     <ProtectedPage>
-      <DashboardLayout>
-        <Breadcrumbs items={breadcrumbItems} />
-        <div className="mt-6">
-          <RoleForm initialData={role} />
-        </div>
-      </DashboardLayout>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className="mt-6">
+        <RoleForm initialData={role} />
+      </div>
     </ProtectedPage>
   );
 }
@@ -41,3 +40,11 @@ export async function getServerSideProps(context: { params: { id: string } }) {
     return { notFound: true };
   }
 }
+
+EditRolePage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashboardLayout>
+      {page}
+    </DashboardLayout>
+  );
+};
