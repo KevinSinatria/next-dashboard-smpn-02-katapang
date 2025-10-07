@@ -10,20 +10,19 @@ interface GalleryAlbumDetailPageProps {
   galleryAlbum: GalleryAlbumDetailType;
 }
 
-export default function GalleryAlbumDetailPage({
+export default function GalleryAlbumEditPage({
   galleryAlbum,
 }: GalleryAlbumDetailPageProps) {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Album Galeri", href: "/dashboard/gallery-albums" },
-    { label: `Detail: ${galleryAlbum.name}` },
+    { label: `Edit: ${galleryAlbum.name}` },
   ];
 
   return (
     <ProtectedPage>
       <Breadcrumbs items={breadcrumbItems} />
       <div className="mt-6">
-        <GalleryAlbumForm initialData={galleryAlbum} readOnly={true} />
+        <GalleryAlbumForm initialData={galleryAlbum} />
       </div>
     </ProtectedPage>
   );
@@ -43,6 +42,6 @@ export async function getServerSideProps(context: { params: { id: string } }) {
   }
 }
 
-GalleryAlbumDetailPage.getLayout = function getLayout(page: ReactElement) {
+GalleryAlbumEditPage.getLayout = function getLayout(page: ReactElement) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };

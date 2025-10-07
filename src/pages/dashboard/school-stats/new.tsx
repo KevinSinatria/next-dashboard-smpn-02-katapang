@@ -7,7 +7,6 @@ import { ReactElement } from "react";
 
 export default function NewSchoolStatPage() {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Statistik Sekolah", href: "/dashboard/school-stats" },
     { label: "Buat Baru" },
   ];

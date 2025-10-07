@@ -6,7 +6,6 @@ import { ReactElement } from "react";
 
 export default function NewArticleCategoryPage() {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Kategori Artikel", href: "/dashboard/article-categories" },
     { label: "Buat Baru" },
   ];

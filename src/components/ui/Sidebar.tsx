@@ -12,6 +12,7 @@ import {
   Users,
   ChevronDown,
   CalendarRange,
+  Newspaper,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,6 +34,7 @@ const iconMap = {
   "Informasi Sekolah": <School size={18} />,
   "Statistik Sekolah": <BarChart3 size={18} />,
   "Agenda Sekolah": <CalendarRange size={18} />,
+  Artikel: <Newspaper size={18} />,
 };
 
 const navGroups: {
@@ -65,6 +67,11 @@ const navGroups: {
         role: ["admin"],
       },
       {
+        name: "Artikel",
+        path: "/dashboard/articles",
+        role: ["admin"],
+      },
+      {
         name: "Informasi Sekolah",
         path: "/dashboard/school-informations",
         role: ["admin"],
@@ -73,7 +80,7 @@ const navGroups: {
         name: "Agenda Sekolah",
         path: "/dashboard/school-events",
         role: ["admin"],
-      }
+      },
     ],
   },
   {

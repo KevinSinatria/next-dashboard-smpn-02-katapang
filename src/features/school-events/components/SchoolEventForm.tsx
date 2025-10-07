@@ -82,7 +82,9 @@ export function EventForm({ initialData, onSuccess }: SchoolEventFormProps) {
       const payload = {
         ...data,
         start_date: format(data.start_date, "yyyy-MM-dd"),
-        end_date: data.end_date ? format(data.end_date, "yyyy-MM-dd") : null,
+        end_date: data.end_date
+          ? format(data.end_date, "yyyy-MM-dd")
+          : format(data.start_date, "yyyy-MM-dd"),
       };
       console.log(payload);
       if (isEditMode) {
@@ -228,10 +230,9 @@ export function EventForm({ initialData, onSuccess }: SchoolEventFormProps) {
           {initialData && isEditMode && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button
-                  variant="destructive"
-                  type="button"
-                >Hapus</Button>
+                <Button variant="destructive" type="button">
+                  Hapus
+                </Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="w-96">
                 <AlertDialogHeader>

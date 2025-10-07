@@ -9,10 +9,12 @@ function ArticleCategoriesContent() {
   useEffect(() => {
     setTitle("Kelola Kategori Artikel");
   }, [setTitle]);
-  
+
   return (
     <div>
-      <ArticleCategoriesDataTable />
+      <div>
+        <ArticleCategoriesDataTable />
+      </div>
     </div>
   );
 }

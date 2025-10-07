@@ -29,9 +29,13 @@ interface ArticleCategoryFormProps {
     id: number;
     name: ArticleCategoryFormType["name"];
   } | null;
+  readOnly?: boolean;
 }
 
-export function ArticleCategoryForm({ initialData }: ArticleCategoryFormProps) {
+export function ArticleCategoryForm({
+  initialData,
+  readOnly,
+}: ArticleCategoryFormProps) {
   const router = useRouter();
   const form = useForm<ArticleCategoryFormType>({
     resolver: zodResolver(articleCategorySchema),
@@ -43,16 +47,17 @@ export function ArticleCategoryForm({ initialData }: ArticleCategoryFormProps) {
     formState: { isSubmitting },
   } = form;
   const isEditMode = !!initialData;
+  const isReadOnly = !!isEditMode && readOnly;
 
-  useEffect(() => {
-    if (isEditMode) {
-      form.reset(initialData!);
-    } else {
-      form.reset({
-        name: "",
-      });
-    }
-  }, [form, initialData, isEditMode]);
+  // useEffect(() => {
+  //   if (isEditMode) {
+  //     form.reset(initialData!);
+  //   } else {
+  //     form.reset({
+  //       name: "",
+  //     });
+  //   }
+  // }, [form, initialData, isEditMode]);
 
   const onSubmit = async (data: ArticleCategoryFormType) => {
     try {
@@ -115,7 +120,7 @@ export function ArticleCategoryForm({ initialData }: ArticleCategoryFormProps) {
               <Button
                 className="flex gap-2 items-center"
                 type="submit"
-                disabled={isSubmitting || !isEditMode }
+                disabled={isSubmitting || isReadOnly}
               >
                 {isSubmitting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
