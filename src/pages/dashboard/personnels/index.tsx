@@ -11,7 +11,9 @@ function PersonnelsContent() {
 
   return (
     <div>
-      <PersonnelsDataTable />
+      <div>
+        <PersonnelsDataTable />
+      </div>
     </div>
   );
 }

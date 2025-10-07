@@ -11,7 +11,9 @@ function GalleryAlbumsContent() {
 
   return (
     <div>
-      <GalleryAlbumsDataTable />
+      <div>
+        <GalleryAlbumsDataTable />
+      </div>
     </div>
   );
 }

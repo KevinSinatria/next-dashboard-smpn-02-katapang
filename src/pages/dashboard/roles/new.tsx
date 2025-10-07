@@ -6,7 +6,6 @@ import { ReactElement } from "react";
 
 export default function NewRolePage() {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Roles", href: "/dashboard/roles" },
     { label: "Buat Baru" },
   ];

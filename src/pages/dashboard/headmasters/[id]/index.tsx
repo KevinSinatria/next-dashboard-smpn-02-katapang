@@ -12,7 +12,6 @@ interface HeadmasterDetailPageProps {
 
 export default function HeadmasterDetailPage({ headmaster }: HeadmasterDetailPageProps) {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Kepala Sekolah", href: "/dashboard/headmasters" },
     { label: `Detail: ${headmaster.name}` },
   ];

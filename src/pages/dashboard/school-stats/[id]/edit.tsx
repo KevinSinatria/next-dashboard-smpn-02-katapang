@@ -12,7 +12,6 @@ interface EditSchoolStatPageProps {
 
 export default function EditSchoolStatPage({ schoolStat }: EditSchoolStatPageProps) {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Statistik Sekolah", href: "/dashboard/school-stats" },
     { label: `Edit: ${schoolStat.year}` },
   ];

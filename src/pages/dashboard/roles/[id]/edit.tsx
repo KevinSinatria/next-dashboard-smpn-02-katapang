@@ -12,7 +12,6 @@ interface EditRolePageProps {
 
 export default function EditRolePage({ role }: EditRolePageProps) {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Roles", href: "/dashboard/roles" },
     { label: `Edit: ${role.name}` },
   ];

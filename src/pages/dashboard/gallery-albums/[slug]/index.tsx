@@ -10,29 +10,28 @@ interface GalleryAlbumDetailPageProps {
   galleryAlbum: GalleryAlbumDetailType;
 }
 
-export default function GalleryAlbumEditPage({
+export default function GalleryAlbumDetailPage({
   galleryAlbum,
 }: GalleryAlbumDetailPageProps) {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Album Galeri", href: "/dashboard/gallery-albums" },
-    { label: `Edit: ${galleryAlbum.name}` },
+    { label: `Detail: ${galleryAlbum.name}` },
   ];
 
   return (
     <ProtectedPage>
       <Breadcrumbs items={breadcrumbItems} />
       <div className="mt-6">
-        <GalleryAlbumForm initialData={galleryAlbum} />
+        <GalleryAlbumForm initialData={galleryAlbum} readOnly={true} />
       </div>
     </ProtectedPage>
   );
 }
 
-export async function getServerSideProps(context: { params: { id: string } }) {
-  const { id } = context.params;
+export async function getServerSideProps(context: { params: { slug: string } }) {
+  const { slug } = context.params;
   try {
-    const response = await apiClient.get(`/gallery-albums/${id}`);
+    const response = await apiClient.get(`/gallery-albums/${slug}`);
     return {
       props: {
         galleryAlbum: response.data.data,
@@ -43,6 +42,6 @@ export async function getServerSideProps(context: { params: { id: string } }) {
   }
 }
 
-GalleryAlbumEditPage.getLayout = function getLayout(page: ReactElement) {
+GalleryAlbumDetailPage.getLayout = function getLayout(page: ReactElement) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };

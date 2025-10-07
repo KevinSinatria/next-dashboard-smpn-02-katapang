@@ -1,4 +1,3 @@
-import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { SchoolInformationForm } from "@/features/school-information/components/SchoolInformationForm";
@@ -13,10 +12,6 @@ interface SchoolInformationPageProps {
 export default function SchoolInformationPage({
   schoolInformation,
 }: SchoolInformationPageProps) {
-  const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
-    { label: "Informasi Sekolah", href: "/dashboard/school-informations" },
-  ];
   const [schoolInformationData, setSchoolInformationData] =
     useState(schoolInformation);
 
@@ -31,8 +26,7 @@ export default function SchoolInformationPage({
 
   return (
     <ProtectedPage>
-      <Breadcrumbs items={breadcrumbItems} />
-      <div className="mt-6">
+      <div>
         <SchoolInformationForm
           initialData={schoolInformationData}
           refetch={fetchData}

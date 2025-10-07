@@ -1,9 +1,7 @@
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
 import { toast } from "sonner";
-import { apiClient } from "@/lib/apiClient";
-import { MoreHorizontal, Plus, Search } from "lucide-react";
+import { useArticles } from "../hooks/useArticles";
+import { useEffect, useState } from "react";
+import { MoreHorizontal, Plus, Search, Eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -23,6 +21,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/router";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,25 +33,29 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useGalleryAlbums } from "../hooks/useGalleryAlbums";
+import { apiClient } from "@/lib/apiClient";
+import { useDebounce } from "use-debounce";
+import { Badge } from "@/components/ui/badge";
 
-export function GalleryAlbumsDataTable() {
+export function ArticlesDataTable() {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [searchDebounced] = useDebounce(searchTerm, 500);
   const router = useRouter();
 
-  const { galleryAlbums, meta, isLoading, mutate } = useGalleryAlbums({
+  const { articles, meta, isLoading, mutate } = useArticles({
     page,
     search: searchDebounced,
   });
 
+  console.log(articles);
+
   useEffect(() => {
     if (isLoading) {
-      toast.loading("Memuat data...", { id: "galleryAlbums" });
+      toast.loading("Memuat data...", { id: "articles" });
     } else {
-      toast.dismiss("galleryAlbums");
+      toast.dismiss("articles");
     }
   }, [isLoading]);
 
@@ -61,17 +64,23 @@ export function GalleryAlbumsDataTable() {
     setPage(1);
   };
 
-  const handleDeleteGalleryAlbum = async (id: number) => {
+  const handleDeleteArticle = async (slug: string) => {
     try {
-      await apiClient.delete(`/gallery-albums/${id}`);
+      await apiClient.delete(`/articles/${slug}`);
 
       mutate();
-      toast.success("Berhasil menghapus album galeri");
+      toast.success("Berhasil menghapus artikel");
     } catch (error) {
       console.log(error);
-      toast.error("Gagal menghapus album galeri");
+      toast.error("Gagal menghapus artikel");
     }
   };
+
+  if (isLoading) {
+    return toast.loading("Memuat data...", { id: "articles" });
+  } else {
+    toast.dismiss("articles");
+  }
 
   return (
     <>
@@ -80,7 +89,7 @@ export function GalleryAlbumsDataTable() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
           <Input
             type="search"
-            placeholder="Cari berdasarkan nama album galeri..."
+            placeholder="Cari berdasarkan judul artikel..."
             className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-white shadow-sm
                focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 
                transition-all duration-200 placeholder:text-gray-400"
@@ -93,18 +102,16 @@ export function GalleryAlbumsDataTable() {
             className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center text-sm gap-2"
             asChild
           >
-            <Link href="/dashboard/gallery-albums/new">
+            <Link href="/dashboard/articles/new">
               <Plus />
               Buat Data
             </Link>
           </Button>
           <div className="bg-gray-200 p-1 flex items-center justify-center rounded-lg">
-            {meta && (
-              <PaginationContainer
-                meta={meta!}
-                handlePageChange={(page: number) => setPage(page)}
-              />
-            )}
+            <PaginationContainer
+              meta={meta!}
+              handlePageChange={(page: number) => setPage(page)}
+            />
           </div>
         </div>
       </div>
@@ -117,25 +124,26 @@ export function GalleryAlbumsDataTable() {
             <TableHead className="hidden sm:table-cell font-semibold">
               Id
             </TableHead>
-            <TableHead className="font-semibold">Nama</TableHead>
-            <TableHead className="font-semibold">Dibuat Pada</TableHead>
-            <TableHead className="font-semibold">Diperbarui Pada</TableHead>
+            <TableHead className="font-semibold">Judul</TableHead>
+            <TableHead className="font-semibold">Penulis</TableHead>
+            <TableHead className="font-semibold">Kategori</TableHead>
+            <TableHead className="font-semibold">Status</TableHead>
+            <TableHead className="hidden sm:table-cell font-semibold">
+              Dibuat
+            </TableHead>
+            <TableHead className="hidden sm:table-cell font-semibold">
+              Diperbarui
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {galleryAlbums &&
-          !isLoading &&
-          galleryAlbums!.length === 0 &&
-          !searchTerm ? (
+          {!isLoading && articles!.length === 0 && !searchTerm ? (
             <TableRow className="text-sm">
               <TableCell colSpan={12} className="text-center h-24">
-                Tidak ada data album galeri.
+                Tidak ada data artikel.
               </TableCell>
             </TableRow>
-          ) : galleryAlbums &&
-            !isLoading &&
-            galleryAlbums!.length === 0 &&
-            searchTerm ? (
+          ) : !isLoading && articles!.length === 0 && searchTerm ? (
             <TableRow className="text-sm">
               <TableCell colSpan={12} className="text-center h-24">
                 Tidak ada data yang cocok dengan pencarian &quot;{searchTerm}
@@ -143,20 +151,14 @@ export function GalleryAlbumsDataTable() {
               </TableCell>
             </TableRow>
           ) : (
-            galleryAlbums &&
             !isLoading &&
-            galleryAlbums!.map((galleryAlbum) => (
-              <TableRow
-                key={galleryAlbum.id}
-                className={`hover:bg-gray-50 text-sm`}
-              >
+            articles!.map((article) => (
+              <TableRow key={article.id} className={`hover:bg-gray-50 text-sm`}>
                 <TableCell>
                   <DropdownMenu
-                    open={openMenuId === galleryAlbum.id}
+                    open={openMenuId === article.id}
                     onOpenChange={(open) =>
-                      open
-                        ? setOpenMenuId(galleryAlbum.id)
-                        : setOpenMenuId(null)
+                      open ? setOpenMenuId(article.id) : setOpenMenuId(null)
                     }
                   >
                     <DropdownMenuTrigger asChild>
@@ -170,18 +172,17 @@ export function GalleryAlbumsDataTable() {
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() =>
-                          router.push(
-                            `/dashboard/gallery-albums/${galleryAlbum.slug}`
-                          )
+                          router.push(`/dashboard/articles/${article.slug}`)
                         }
                       >
-                        Lihat Detail
+                        <Eye className="mr-2 h-4 w-4" />
+                        Detail
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() =>
                           router.push(
-                            `/dashboard/gallery-albums/${galleryAlbum.id}/edit`
+                            `/dashboard/articles/${article.slug}/edit`
                           )
                         }
                       >
@@ -209,9 +210,7 @@ export function GalleryAlbumsDataTable() {
                           <AlertDialogFooter>
                             <AlertDialogCancel>Batal</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() =>
-                                handleDeleteGalleryAlbum(galleryAlbum.id)
-                              }
+                              onClick={() => handleDeleteArticle(article.slug)}
                               className="bg-red-600 hover:bg-red-700"
                             >
                               Ya, Hapus
@@ -223,14 +222,26 @@ export function GalleryAlbumsDataTable() {
                   </DropdownMenu>
                 </TableCell>
                 <TableCell className="hidden font-medium sm:table-cell">
-                  {galleryAlbum.id}
+                  {article.id}
                 </TableCell>
-                <TableCell>{galleryAlbum.name}</TableCell>
-                <TableCell>
-                  {new Date(galleryAlbum.created_at).toLocaleDateString()}
+                <TableCell className="font-medium max-w-xs truncate">
+                  {article.title}
                 </TableCell>
+                <TableCell>{article.author}</TableCell>
+                <TableCell>{article.category}</TableCell>
                 <TableCell>
-                  {new Date(galleryAlbum.updated_at).toLocaleDateString()}
+                  <Badge className="flex items-center justify-center gap-2" variant={article.published ? "default" : "secondary"}>
+                    {article.published ? "Dipublikasi" : "Draft"}
+                    {!article.published && (
+                      <div className="w-1 h-1 bg-green-400 rounded-full animate-ping"></div>
+                    )}
+                  </Badge>
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  {new Date(article.created_at).toLocaleDateString("id-ID")}
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  {new Date(article.updated_at).toLocaleDateString("id-ID")}
                 </TableCell>
               </TableRow>
             ))
