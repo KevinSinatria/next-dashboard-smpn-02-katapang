@@ -14,7 +14,6 @@ export default function EditHeadmasterPage({
   headmaster,
 }: EditHeadmasterPageProps) {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Kepala Sekolah", href: "/dashboard/headmasters" },
     { label: `Edit: ${headmaster.name}` },
   ];

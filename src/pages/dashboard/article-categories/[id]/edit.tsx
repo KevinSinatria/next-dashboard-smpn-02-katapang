@@ -14,7 +14,6 @@ export default function EditArticleCategoryPage({
   articleCategory,
 }: EditArticleCategoryPageProps) {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Kategori Artikel", href: "/dashboard/article-categories" },
     { label: `Edit: ${articleCategory.name}` },
   ];

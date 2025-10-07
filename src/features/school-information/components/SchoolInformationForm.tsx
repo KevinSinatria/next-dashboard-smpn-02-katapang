@@ -97,7 +97,7 @@ export function SchoolInformationForm({
     if (initialData) {
       form.reset(initialData);
     }
-  }, [initialData, form]);
+  }, [initialData]);
 
   const onSubmit = async (data: SchoolInformationFormType) => {
     try {

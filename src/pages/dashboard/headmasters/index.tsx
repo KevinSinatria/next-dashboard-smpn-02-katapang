@@ -11,7 +11,9 @@ function HeadmastersContent() {
 
   return (
     <div>
-      <HeadmastersDataTable />
+      <div>
+        <HeadmastersDataTable />
+      </div>
     </div>
   );
 }

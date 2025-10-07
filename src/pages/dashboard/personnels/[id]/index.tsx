@@ -12,8 +12,7 @@ interface PersonnelDetailPageProps {
 
 export default function PersonnelDetailPage({ personnel }: PersonnelDetailPageProps) {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
-    { label: "Personnels", href: "/dashboard/personnels" },
+    { label: "Personil", href: "/dashboard/personnels" },
     { label: `Detail: ${personnel.name}` },
   ];
 

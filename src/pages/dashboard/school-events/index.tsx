@@ -5,9 +5,7 @@ import { createEventsServicePlugin } from "@schedule-x/events-service";
 import { useNextCalendarApp, ScheduleXCalendar } from "@schedule-x/react";
 import "@schedule-x/theme-shadcn/dist/index.css";
 import {
-  createViewDay,
   createViewMonthGrid,
-  createViewWeek,
 } from "@schedule-x/calendar";
 import { useHeader } from "@/contexts/HeaderContext";
 import {
@@ -139,7 +137,7 @@ export default function SchoolEventsPage() {
 
   return (
     <>
-      <div className="sx-react-calendar-wrapper mt-6">
+      <div className="sx-react-calendar-wrapper">
         <ScheduleXCalendar calendarApp={calendarApp} />
       </div>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

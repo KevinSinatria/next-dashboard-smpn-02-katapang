@@ -6,8 +6,7 @@ import { ReactElement } from "react";
 
 export default function NewPersonnelPage() {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
-    { label: "Personnels", href: "/dashboard/personnels" },
+    { label: "Personil", href: "/dashboard/personnels" },
     { label: "Buat Baru" },
   ];
   

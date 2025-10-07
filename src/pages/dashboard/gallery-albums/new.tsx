@@ -6,7 +6,6 @@ import { ReactElement } from "react";
 
 export default function NewGalleryAlbumPage() {
   const breadcrumbItems = [
-    { label: "Dashboard", href: "/dashboard" },
     { label: "Album Galeri", href: "/dashboard/gallery-albums" },
     { label: "Buat Baru" },
   ];

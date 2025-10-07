@@ -1,28 +1,28 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useHeader } from "@/contexts/HeaderContext";
-import { SchoolStatsDataTable } from "@/features/school-stats/components/SchoolStatsDataTable";
+import { ArticlesDataTable } from "@/features/articles/components/ArticlesDataTable";
 import { ReactElement, useEffect } from "react";
 
-function SchoolStatsContent() {
+function ArticlesContent() {
   const { setTitle } = useHeader();
 
   useEffect(() => {
-    setTitle("Kelola Statistik Sekolah");
+    setTitle("Kelola Artikel");
   }, [setTitle]);
 
   return (
     <div>
       <div>
-        <SchoolStatsDataTable />
+        <ArticlesDataTable />
       </div>
     </div>
   );
 }
 
-export default function SchoolStatsPage() {
-  return <SchoolStatsContent />;
+export default function ArticlesPage() {
+  return <ArticlesContent />;
 }
 
-SchoolStatsPage.getLayout = function getLayout(page: ReactElement) {
+ArticlesPage.getLayout = function getLayout(page: ReactElement) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
