@@ -36,6 +36,7 @@ import {
 import { apiClient } from "@/lib/apiClient";
 import { useDebounce } from "use-debounce";
 import { Badge } from "@/components/ui/badge";
+import { ArticleType } from "../types";
 
 export function ArticlesDataTable() {
   const [page, setPage] = useState(1);

@@ -15,7 +15,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const verifyUser = async () => {
       try {
         const response = await apiClient.get("/auth/me");
-        setUser(response.data.data);
+        const { data } = response.data;
+        setUser(data);
       } catch {
         setUser(null);
       } finally {

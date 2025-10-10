@@ -298,6 +298,7 @@ export function ArticleForm({ initialData, readOnly }: ArticleFormProps) {
                       holder="editorjs-container"
                       fullFeature={true}
                     />
+                    {/* <SimpleEditor /> */}
                   </FormControl>
                   <FormMessage />
                 </FormItem>

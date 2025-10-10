@@ -4,13 +4,41 @@ import { ArticleForm } from "@/features/articles/components/ArticleForm";
 import { ArticleDetailType } from "@/features/articles/types";
 import { apiClient } from "@/lib/apiClient";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { ReactElement } from "react";
+import { useRouter } from "next/router";
+import { ReactElement, useEffect, useState } from "react";
 
-interface EditArticlePageProps {
-  article: ArticleDetailType;
-}
+export default function EditArticlePage() {
+  const router = useRouter();
+  const { slug } = router.query;
+  const [article, setArticle] = useState<ArticleDetailType | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export default function EditArticlePage({ article }: EditArticlePageProps) {
+  useEffect(() => {
+    if (slug) {
+      fetchArticle();
+    }
+  }, [slug]);
+
+  const fetchArticle = async () => {
+    try {
+      const response = await apiClient.get(`/articles/${slug}`);
+      setArticle(response.data.data);
+    } catch (error) {
+      console.error(error);
+      router.push('/404');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!article) {
+    return <div>Data tidak ditemukan</div>;
+  }
+
   const breadcrumbItems = [
     { label: "Artikel", href: "/dashboard/articles" },
     { label: `Edit: ${article.title}` },
@@ -24,20 +52,6 @@ export default function EditArticlePage({ article }: EditArticlePageProps) {
       </div>
     </ProtectedPage>
   );
-}
-
-export async function getServerSideProps(context: { params: { slug: string } }) {
-  const { slug } = context.params;
-  try {
-    const response = await apiClient.get(`/articles/${slug}`);
-    return {
-      props: {
-        article: response.data.data,
-      },
-    };
-  } catch {
-    return { notFound: true };
-  }
 }
 
 EditArticlePage.getLayout = function getLayout(page: ReactElement) {

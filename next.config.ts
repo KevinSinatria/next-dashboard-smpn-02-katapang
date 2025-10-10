@@ -10,9 +10,23 @@ const nextConfig: NextConfig = {
         hostname: "drive.google.com",
         port: "",
         pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        port: "",
+        pathname: "/**",
       }
-    ]
-  }
+    ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://api.smpn2katapang.sch.id/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
