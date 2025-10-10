@@ -4,13 +4,41 @@ import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { RoleForm } from "@/features/roles/components/RoleForm";
 import { RoleType } from "@/features/roles/types";
 import { apiClient } from "@/lib/apiClient";
-import { ReactElement } from "react";
+import { useRouter } from "next/router";
+import { ReactElement, useEffect, useState } from "react";
 
-interface EditRolePageProps {
-  role: RoleType;
-}
+export default function EditRolePage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [role, setRole] = useState<RoleType | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export default function EditRolePage({ role }: EditRolePageProps) {
+  useEffect(() => {
+    if (id) {
+      fetchRole();
+    }
+  }, [id]);
+
+  const fetchRole = async () => {
+    try {
+      const response = await apiClient.get(`/roles/${id}`);
+      setRole(response.data.data);
+    } catch (error) {
+      console.error(error);
+      router.push('/404');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!role) {
+    return <div>Data tidak ditemukan</div>;
+  }
+
   const breadcrumbItems = [
     { label: "Roles", href: "/dashboard/roles" },
     { label: `Edit: ${role.name}` },
@@ -24,20 +52,6 @@ export default function EditRolePage({ role }: EditRolePageProps) {
       </div>
     </ProtectedPage>
   );
-}
-
-export async function getServerSideProps(context: { params: { id: string } }) {
-  const { id } = context.params;
-  try {
-    const response = await apiClient.get(`/roles/${id}`);
-    return {
-      props: {
-        role: response.data.data,
-      },
-    };
-  } catch {
-    return { notFound: true };
-  }
 }
 
 EditRolePage.getLayout = function getLayout(page: ReactElement) {

@@ -181,7 +181,7 @@ export function GalleryAlbumsDataTable() {
                         className="cursor-pointer"
                         onClick={() =>
                           router.push(
-                            `/dashboard/gallery-albums/${galleryAlbum.id}/edit`
+                            `/dashboard/gallery-albums/${galleryAlbum.slug}/edit`
                           )
                         }
                       >

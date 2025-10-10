@@ -5,6 +5,7 @@ import type { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
 import { Toaster } from "sonner";
 import 'temporal-polyfill/global';
+import '@schedule-x/theme-default/dist/index.css';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {

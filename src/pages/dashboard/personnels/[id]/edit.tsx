@@ -54,9 +54,11 @@ import {
   RolePersonnelType,
 } from "@/features/personnels/types";
 import { useRoles } from "@/features/roles/hooks/useRoles";
-import { apiClient } from "@/lib/apiClient";
+import { apiClient, apiClientAsServer } from "@/lib/apiClient";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { PlusCircle, Trash, Edit } from "lucide-react";
+import { NextApiRequest } from "next";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -298,9 +300,7 @@ export default function EditPersonnelPage({
   };
 
   if (!personnel) {
-    return (
-      <div>Loading personnel data...</div>
-    );
+    return <div>Loading personnel data...</div>;
   }
 
   const breadcrumbItems = [
@@ -399,25 +399,62 @@ export default function EditPersonnelPage({
   );
 }
 
-export async function getServerSideProps(context: { params: { id: string } }) {
+export async function getServerSideProps(context: {
+  params: { id: string };
+  req: NextApiRequest;
+}) {
   const { id } = context.params;
+  const { req } = context;
+
+  const cookie = req.headers.cookie;
+
+  if (!cookie) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
   try {
-    const response = await apiClient.get(`/personnel/${id}`);
+    const response = await apiClientAsServer.get(`/personnel/${id}`, {
+      headers: {
+        Cookie: cookie,
+      },
+    });
+
+    console.log("Response data:", response.data);
+
     return {
       props: {
         personnel: response.data.data,
       },
     };
-  } catch {
+  } catch (error) {
+    console.error(error);
+    if (error instanceof AxiosError) {
+      const status = error.response?.status;
+
+      if (status === 404) {
+        return {
+          notFound: true,
+        };
+      }
+
+      if (status === 401 || status === 403) {
+        return {
+          redirect: {
+            destination: "/login",
+            permanent: false,
+          },
+        };
+      }
+    }
     return { notFound: true };
   }
 }
 
-
 EditPersonnelPage.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <DashboardLayout>
-      {page}
-    </DashboardLayout>
-  );
+  return <DashboardLayout>{page}</DashboardLayout>;
 };

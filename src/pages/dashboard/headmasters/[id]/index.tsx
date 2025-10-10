@@ -4,13 +4,41 @@ import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { HeadmasterForm } from "@/features/headmasters/components/HeadmasterForm";
 import { HeadmasterDetailType } from "@/features/headmasters/types";
 import { apiClient } from "@/lib/apiClient";
-import { ReactElement } from "react";
+import { useRouter } from "next/router";
+import { ReactElement, useEffect, useState } from "react";
 
-interface HeadmasterDetailPageProps {
-    headmaster: HeadmasterDetailType;
-}
+export default function HeadmasterDetailPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [headmaster, setHeadmaster] = useState<HeadmasterDetailType | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export default function HeadmasterDetailPage({ headmaster }: HeadmasterDetailPageProps) {
+  useEffect(() => {
+    if (id) {
+      fetchHeadmaster();
+    }
+  }, [id]);
+
+  const fetchHeadmaster = async () => {
+    try {
+      const response = await apiClient.get(`/headmasters/${id}`);
+      setHeadmaster(response.data.data);
+    } catch (error) {
+      console.error(error);
+      router.push('/404');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!headmaster) {
+    return <div>Data tidak ditemukan</div>;
+  }
+
   const breadcrumbItems = [
     { label: "Kepala Sekolah", href: "/dashboard/headmasters" },
     { label: `Detail: ${headmaster.name}` },
@@ -24,20 +52,6 @@ export default function HeadmasterDetailPage({ headmaster }: HeadmasterDetailPag
       </div>
     </ProtectedPage>
   );
-}
-
-export async function getServerSideProps(context: { params: { id: string } }) {
-  const { id } = context.params;
-  try {
-    const response = await apiClient.get(`/headmasters/${id}`);
-    return {
-      props: {
-        headmaster: response.data.data,
-      },
-    };
-  } catch {
-    return { notFound: true };
-  }
 }
 
 HeadmasterDetailPage.getLayout = function getLayout(page: ReactElement) {

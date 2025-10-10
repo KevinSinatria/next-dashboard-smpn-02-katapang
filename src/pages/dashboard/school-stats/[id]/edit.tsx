@@ -4,13 +4,41 @@ import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { SchoolStatForm } from "@/features/school-stats/components/SchoolStatForm";
 import { SchoolStatType } from "@/features/school-stats/types";
 import { apiClient } from "@/lib/apiClient";
-import { ReactElement } from "react";
+import { useRouter } from "next/router";
+import { ReactElement, useEffect, useState } from "react";
 
-interface EditSchoolStatPageProps {
-  schoolStat: SchoolStatType;
-}
+export default function EditSchoolStatPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [schoolStat, setSchoolStat] = useState<SchoolStatType | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export default function EditSchoolStatPage({ schoolStat }: EditSchoolStatPageProps) {
+  useEffect(() => {
+    if (id) {
+      fetchSchoolStat();
+    }
+  }, [id]);
+
+  const fetchSchoolStat = async () => {
+    try {
+      const response = await apiClient.get(`/school-stats/${id}`);
+      setSchoolStat(response.data.data);
+    } catch (error) {
+      console.error(error);
+      router.push('/404');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!schoolStat) {
+    return <div>Data tidak ditemukan</div>;
+  }
+
   const breadcrumbItems = [
     { label: "Statistik Sekolah", href: "/dashboard/school-stats" },
     { label: `Edit: ${schoolStat.year}` },
@@ -24,20 +52,6 @@ export default function EditSchoolStatPage({ schoolStat }: EditSchoolStatPagePro
       </div>
     </ProtectedPage>
   );
-}
-
-export async function getServerSideProps(context: { params: { id: string } }) {
-  const { id } = context.params;
-  try {
-    const response = await apiClient.get(`/school-stats/${id}`);
-    return {
-      props: {
-        schoolStat: response.data.data,
-      },
-    };
-  } catch {
-    return { notFound: true };
-  }
 }
 
 EditSchoolStatPage.getLayout = function getLayout(page: ReactElement) {

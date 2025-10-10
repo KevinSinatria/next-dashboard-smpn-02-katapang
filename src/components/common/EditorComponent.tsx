@@ -10,6 +10,7 @@ import Paragraph from "@editorjs/paragraph";
 import Table from "@editorjs/table";
 import Quote from "@editorjs/quote";
 import Embed from "@editorjs/embed";
+import Image from "@editorjs/image";
 
 interface EditorProps {
   data?: OutputData;
@@ -44,9 +45,10 @@ export function EditorComponent({
         inlineToolbar: true,
         config: {
           placeholder: "Enter a header",
-          levels: [2, 3, 4],
+          levels: [2, 3, 4, 5, 6],
           defaultLevel: 3,
         },
+        shortcut: "CMD+SHIFT+H",
       },
       list: {
         class: List,
@@ -72,15 +74,15 @@ export function EditorComponent({
           },
         },
       },
-      // image: {
-      //   class: ImageTool,
-      //   config: {
-      //     endpoints: {
-      //       byFile: `${BASE_URL}/articles/image`,
-      //     },
-      //     field: "image",
-      //   },
-      // },
+      image: {
+        class: Image,
+        config: {
+          endpoints: {
+            byFile: `${BASE_URL}/articles/image`,
+          },
+          field: "image",
+        },
+      },
     };
 
     // 3. Gabungkan keduanya. Jika fullFeature=false, maka tidak ada yang ditambahkan.

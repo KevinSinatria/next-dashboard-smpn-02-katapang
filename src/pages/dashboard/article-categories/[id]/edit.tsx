@@ -4,15 +4,41 @@ import { ArticleCategoryForm } from "@/features/article-categories/components/Ar
 import { ArticleCategoryType } from "@/features/article-categories/types";
 import { apiClient } from "@/lib/apiClient";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { ReactElement } from "react";
+import { useRouter } from "next/router";
+import { ReactElement, useEffect, useState } from "react";
 
-interface EditArticleCategoryPageProps {
-  articleCategory: ArticleCategoryType;
-}
+export default function EditArticleCategoryPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [articleCategory, setArticleCategory] = useState<ArticleCategoryType | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export default function EditArticleCategoryPage({
-  articleCategory,
-}: EditArticleCategoryPageProps) {
+  useEffect(() => {
+    if (id) {
+      fetchArticleCategory();
+    }
+  }, [id]);
+
+  const fetchArticleCategory = async () => {
+    try {
+      const response = await apiClient.get(`/article-categories/${id}`);
+      setArticleCategory(response.data.data);
+    } catch (error) {
+      console.error(error);
+      router.push('/404');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!articleCategory) {
+    return <div>Data tidak ditemukan</div>;
+  }
+
   const breadcrumbItems = [
     { label: "Kategori Artikel", href: "/dashboard/article-categories" },
     { label: `Edit: ${articleCategory.name}` },
@@ -26,20 +52,6 @@ export default function EditArticleCategoryPage({
       </div>
     </ProtectedPage>
   );
-}
-
-export async function getServerSideProps(context: { params: { id: string } }) {
-  const { id } = context.params;
-  try {
-    const response = await apiClient.get(`/article-categories/${id}`);
-    return {
-      props: {
-        articleCategory: response.data.data,
-      },
-    };
-  } catch {
-    return { notFound: true };
-  }
 }
 
 EditArticleCategoryPage.getLayout = function getLayout(page: ReactElement) {

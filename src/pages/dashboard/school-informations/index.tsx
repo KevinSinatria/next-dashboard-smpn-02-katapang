@@ -3,50 +3,45 @@ import ProtectedPage from "@/features/auth/components/ProtectedPage";
 import { SchoolInformationForm } from "@/features/school-information/components/SchoolInformationForm";
 import { SchoolInformationType } from "@/features/school-information/types";
 import { apiClient } from "@/lib/apiClient";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
-interface SchoolInformationPageProps {
-  schoolInformation: SchoolInformationType;
-}
+export default function SchoolInformationPage() {
+  const [schoolInformation, setSchoolInformation] = useState<SchoolInformationType | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export default function SchoolInformationPage({
-  schoolInformation,
-}: SchoolInformationPageProps) {
-  const [schoolInformationData, setSchoolInformationData] =
-    useState(schoolInformation);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     try {
       const response = await apiClient.get(`/school-informations`);
-      setSchoolInformationData(response.data.data);
+      setSchoolInformation(response.data.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!schoolInformation) {
+    return <div>Data tidak ditemukan</div>;
+  }
 
   return (
     <ProtectedPage>
       <div>
         <SchoolInformationForm
-          initialData={schoolInformationData}
+          initialData={schoolInformation}
           refetch={fetchData}
         />
       </div>
     </ProtectedPage>
   );
-}
-
-export async function getServerSideProps() {
-  try {
-    const response = await apiClient.get(`/school-informations`);
-    return {
-      props: {
-        schoolInformation: response.data.data,
-      },
-    };
-  } catch {
-    return { notFound: true };
-  }
 }
 
 SchoolInformationPage.getLayout = function getLayout(page: ReactElement) {
