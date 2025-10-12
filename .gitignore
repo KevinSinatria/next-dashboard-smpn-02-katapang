@@ -42,3 +42,4 @@ next-env.d.ts
 /types/*
 
 certificates
+/index.sh
