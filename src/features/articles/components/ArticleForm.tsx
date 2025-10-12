@@ -31,7 +31,6 @@ import { useAuth } from "@/features/auth/context/AuthContext";
 import { useArticleCategories } from "@/features/article-categories/hooks/useArticleCategories";
 import { ImageDropzone } from "@/components/common/ImageDropzone";
 import { Loader2 } from "lucide-react";
-import { parse } from "path";
 import { OutputData } from "@editorjs/editorjs";
 
 const EditorComponent = dynamic(
