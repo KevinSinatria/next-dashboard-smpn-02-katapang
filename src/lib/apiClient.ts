@@ -3,7 +3,7 @@ import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const apiClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: process.env.NODE_ENV === "production" ? BASE_URL : "/api",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
