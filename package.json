@@ -6,7 +6,7 @@
     "dev --https": "cross-env NODE_EXTRA_CA_CERTS=\"C:/Users/Kevin/AppData/Local/mkcert/rootCA.pem\" next dev --turbopack --experimental-https",
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "eslint"
   },
   "dependencies": {
