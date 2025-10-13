@@ -16,7 +16,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import MDEditor from "@uiw/react-md-editor";
+import dynamic from "next/dynamic";
+import MarkdownPreview from "@uiw/react-markdown-preview";
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+  ssr: false, // <-- Bagian paling penting!
+  // Tambahkan ini untuk menampilkan tulisan "Loading..." saat komponen dimuat
+  loading: () => <p>Loading editor...</p>,
+});
 
 const schoolInformationSchema = z.object({
   email: z
@@ -187,7 +193,7 @@ export function SchoolInformationForm({
                           onChange={(value) => field.onChange(value)}
                         />
                       ) : (
-                        <MDEditor.Markdown source={field.value || ""} />
+                        <MarkdownPreview source={field.value || ""} />
                       )}
                     </div>
                   </FormControl>
@@ -210,7 +216,7 @@ export function SchoolInformationForm({
                           onChange={(value) => field.onChange(value)}
                         />
                       ) : (
-                        <MDEditor.Markdown source={field.value || ""} />
+                        <MarkdownPreview source={field.value || ""} />
                       )}
                     </div>
                   </FormControl>
