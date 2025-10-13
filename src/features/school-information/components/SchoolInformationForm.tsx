@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -17,11 +19,15 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import dynamic from "next/dynamic";
-import MarkdownPreview from "@uiw/react-markdown-preview";
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false, // <-- Bagian paling penting!
   // Tambahkan ini untuk menampilkan tulisan "Loading..." saat komponen dimuat
   loading: () => <p>Loading editor...</p>,
+});
+
+const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), {
+  ssr: false,
+  loading: () => <p>Loading preview...</p>,
 });
 
 const schoolInformationSchema = z.object({
