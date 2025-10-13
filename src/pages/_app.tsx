@@ -6,6 +6,8 @@ import { ReactElement, ReactNode } from "react";
 import { Toaster } from "sonner";
 import 'temporal-polyfill/global';
 import '@schedule-x/theme-default/dist/index.css';
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
