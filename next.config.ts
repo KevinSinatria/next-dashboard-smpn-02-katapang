@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
+  transpilePackages: [
+    '@uiw/react-md-editor',
+    '@uiw/react-markdown-preview',
+  ],
   images: {
     remotePatterns: [
       {
