@@ -105,11 +105,11 @@ export function SchoolInformationForm({
   } = form;
   const [isReadOnly, setIsReadOnly] = useState(true);
 
-  // useEffect(() => {
-  //   if (initialData) {
-  //     form.reset(initialData);
-  //   }
-  // }, [initialData]);
+  useEffect(() => {
+    if (initialData) {
+      form.reset(initialData);
+    }
+  }, [initialData]);
 
   const onSubmit = async (data: SchoolInformationFormType) => {
     try {
