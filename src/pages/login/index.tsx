@@ -20,7 +20,7 @@ export default function LoginPage() {
   const router = useRouter();
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
-      router.push("/dashboard/roles");
+      router.push("/dashboard");
     }
   }, [isAuthenticated, isLoading, router]);
   return (

@@ -1,6 +1,7 @@
 export interface User {
   id: number;
   username: string;
+  image_url: string;
   role: string[];
 }
 
