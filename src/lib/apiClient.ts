@@ -5,6 +5,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const apiClient = axios.create({
   baseURL:
     process.env.NEXT_PUBLIC_NODE_ENV === "production" ? BASE_URL : "/api",
+    // BASE_URL,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

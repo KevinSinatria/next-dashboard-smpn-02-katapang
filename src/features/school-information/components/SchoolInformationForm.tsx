@@ -107,7 +107,13 @@ export function SchoolInformationForm({
 
   useEffect(() => {
     if (initialData) {
-      form.reset(initialData);
+      form.setValue("email", initialData.email || "");
+      form.setValue("phone", initialData.phone || "");
+      form.setValue("vision", initialData.vision || "");
+      form.setValue("missions", initialData.missions || "");
+      form.setValue("address", initialData.address || "");
+      form.setValue("map_url", initialData.map_url || "");
+      form.setValue("instagram", initialData.instagram || "");
     }
   }, [initialData]);
 
