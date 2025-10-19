@@ -13,11 +13,14 @@ import {
   ChevronDown,
   CalendarRange,
   Newspaper,
+  User,
 } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useAuth } from "@/features/auth/context/AuthContext";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface NavItem {
   name: keyof typeof iconMap;
@@ -35,21 +38,37 @@ const iconMap = {
   "Statistik Sekolah": <BarChart3 size={18} />,
   "Agenda Sekolah": <CalendarRange size={18} />,
   Artikel: <Newspaper size={18} />,
+  Akun: <User size={18} />,
 };
 
-const navGroups: {
+type NavGroupsType = {
   label: string;
   items: NavItem[];
-}[] = [
+};
+
+const navGroups: NavGroupsType[] = [
   {
     label: "Manajemen Sekolah",
     items: [
-      { name: "Roles", path: "/dashboard/roles", role: ["admin"] },
-      { name: "Personil", path: "/dashboard/personnels", role: ["admin"] },
+      {
+        name: "Roles",
+        path: "/dashboard/roles",
+        role: ["admin", "super admin"],
+      },
+      {
+        name: "Personil",
+        path: "/dashboard/personnels",
+        role: ["admin", "super admin"],
+      },
       {
         name: "Kepala Sekolah",
         path: "/dashboard/headmasters",
-        role: ["admin"],
+        role: ["admin", "super admin"],
+      },
+      {
+        name: "Akun",
+        path: "/dashboard/users",
+        role: ["admin", "super admin"],
       },
     ],
   },
@@ -59,27 +78,27 @@ const navGroups: {
       {
         name: "Album Galeri",
         path: "/dashboard/gallery-albums",
-        role: ["admin"],
+        role: ["admin", "super admin", "humas", "pks humas"],
       },
       {
         name: "Kategori Artikel",
         path: "/dashboard/article-categories",
-        role: ["admin"],
+        role: ["admin", "super admin", "humas", "pks humas"],
       },
       {
         name: "Artikel",
         path: "/dashboard/articles",
-        role: ["admin"],
+        role: ["admin", "super admin", "humas", "pks humas"],
       },
       {
         name: "Informasi Sekolah",
         path: "/dashboard/school-informations",
-        role: ["admin"],
+        role: ["admin", "super admin", "humas", "pks humas"],
       },
       {
         name: "Agenda Sekolah",
         path: "/dashboard/school-events",
-        role: ["admin"],
+        role: ["admin", "super admin", "humas", "pks humas"],
       },
     ],
   },
@@ -89,7 +108,7 @@ const navGroups: {
       {
         name: "Statistik Sekolah",
         path: "/dashboard/school-stats",
-        role: ["admin"],
+        role: ["admin", "super admin"],
       },
     ],
   },
@@ -207,10 +226,32 @@ const Sidebar = ({
 }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isLoading, isAuthenticated, logout } = useAuth();
-  const [isAccessible, setIsAccessible] = useState(navGroups);
+  const { user } = useAuth();
+  const [isAccessible, setIsAccessible] = useState<NavGroupsType[]>([]);
 
   const closeSidebar = () => setIsOpen(false);
+
+  useEffect(() => {
+    if (!user?.role) return;
+
+    const filteredGroups = navGroups
+      .map((group) => {
+        const filteredItems = group.items.filter((item) =>
+          // Cek apakah ada minimal satu role user yang cocok dengan role item
+          item.role?.some((r) => {
+            for (const userRole of user.role) {
+              return userRole.toLowerCase() === r.toLowerCase();
+            }
+          })
+        );
+
+        return { ...group, items: filteredItems };
+      })
+      // Hanya ambil group yang punya item setelah difilter
+      .filter((group) => group.items.length > 0);
+
+    setIsAccessible(filteredGroups);
+  }, [user]);
 
   const baseStyle = {
     flat: "bg-white border-r border-slate-200",
@@ -257,7 +298,7 @@ const Sidebar = ({
             key={group.label}
             label={group.label}
             items={group.items}
-            activePath={pathname}
+            activePath={pathname || ""}
             onNavigate={(path) => {
               router.push(path);
               if (window.innerWidth < 1024) closeSidebar();
@@ -268,7 +309,7 @@ const Sidebar = ({
 
       {/* Logout Button */}
       <div className="px-4 py-4 border-t border-slate-200">
-        <motion.button
+        {/* <motion.button
           onClick={logout}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
@@ -281,7 +322,11 @@ const Sidebar = ({
         >
           <LogOut className="w-4 h-4" />
           <span className="tracking-wide">Logout</span>
-        </motion.button>
+        </motion.button> */}
+        <p className="text-sm">
+          Dikembangkan oleh <Link href={"https://nexvibe.biz.id"}>Nexvibe</Link>
+          .
+        </p>
       </div>
     </>
   );

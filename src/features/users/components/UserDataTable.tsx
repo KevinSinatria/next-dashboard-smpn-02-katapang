@@ -1,7 +1,6 @@
 import { toast } from "sonner";
-import { useArticles } from "../hooks/useArticles";
 import { useEffect, useState } from "react";
-import { MoreHorizontal, Plus, Search, Eye } from "lucide-react";
+import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -35,26 +34,35 @@ import {
 } from "@/components/ui/alert-dialog";
 import { apiClient } from "@/lib/apiClient";
 import { useDebounce } from "use-debounce";
+import { useUsers } from "../hooks/useUsers";
 import { Badge } from "@/components/ui/badge";
-import { ArticleType } from "../types";
 
-export function ArticlesDataTable() {
+export function UsersDataTable() {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [searchDebounced] = useDebounce(searchTerm, 500);
   const router = useRouter();
 
-  const { articles, meta, isLoading, mutate } = useArticles({
+  const { users, meta, isLoading, mutate } = useUsers({
     page,
     search: searchDebounced,
   });
 
+  function getRandomHexColor() {
+    return (
+      "#" +
+      Math.floor(Math.random() * 148)
+        .toString(16)
+        .padStart(6, "0")
+    );
+  }
+
   useEffect(() => {
     if (isLoading) {
-      toast.loading("Memuat data...", { id: "articles" });
+      toast.loading("Memuat data...", { id: "users" });
     } else {
-      toast.dismiss("articles");
+      toast.dismiss("users");
     }
   }, [isLoading]);
 
@@ -63,22 +71,22 @@ export function ArticlesDataTable() {
     setPage(1);
   };
 
-  const handleDeleteArticle = async (slug: string) => {
+  const handleDeleteUser = async (id: number) => {
     try {
-      await apiClient.delete(`/articles/${slug}`);
+      await apiClient.delete(`/users/${id}`);
 
       mutate();
-      toast.success("Berhasil menghapus artikel");
+      toast.success("Berhasil menghapus user");
     } catch (error) {
       console.log(error);
-      toast.error("Gagal menghapus artikel");
+      toast.error("Gagal menghapus user");
     }
   };
 
   if (isLoading) {
-    return toast.loading("Memuat data...", { id: "articles" });
+    return toast.loading("Memuat data...", { id: "users" });
   } else {
-    toast.dismiss("articles");
+    toast.dismiss("users");
   }
 
   return (
@@ -88,7 +96,7 @@ export function ArticlesDataTable() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
           <Input
             type="search"
-            placeholder="Cari berdasarkan judul artikel..."
+            placeholder="Cari berdasarkan nama role..."
             className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-white shadow-sm
                focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 
                transition-all duration-200 placeholder:text-gray-400"
@@ -101,7 +109,7 @@ export function ArticlesDataTable() {
             className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center text-sm gap-2"
             asChild
           >
-            <Link href="/dashboard/articles/new">
+            <Link href="/dashboard/users/new">
               <Plus />
               Buat Data
             </Link>
@@ -121,28 +129,19 @@ export function ArticlesDataTable() {
               <span className="sr-only">Aksi</span>
             </TableHead>
             <TableHead className="hidden sm:table-cell font-semibold">
-              Id
+              Username
             </TableHead>
-            <TableHead className="font-semibold">Judul</TableHead>
-            <TableHead className="font-semibold">Penulis</TableHead>
-            <TableHead className="font-semibold">Kategori</TableHead>
-            <TableHead className="font-semibold">Status</TableHead>
-            <TableHead className="hidden sm:table-cell font-semibold">
-              Dibuat
-            </TableHead>
-            <TableHead className="hidden sm:table-cell font-semibold">
-              Diperbarui
-            </TableHead>
+            <TableHead className="font-semibold">Role</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {!isLoading && articles!.length === 0 && !searchTerm ? (
+          {!isLoading && users!.length === 0 && !searchTerm ? (
             <TableRow className="text-sm">
               <TableCell colSpan={12} className="text-center h-24">
-                Tidak ada data artikel.
+                Tidak ada data users.
               </TableCell>
             </TableRow>
-          ) : !isLoading && articles!.length === 0 && searchTerm ? (
+          ) : !isLoading && users!.length === 0 && searchTerm ? (
             <TableRow className="text-sm">
               <TableCell colSpan={12} className="text-center h-24">
                 Tidak ada data yang cocok dengan pencarian &quot;{searchTerm}
@@ -151,13 +150,13 @@ export function ArticlesDataTable() {
             </TableRow>
           ) : (
             !isLoading &&
-            articles!.map((article) => (
-              <TableRow key={article.id} className={`hover:bg-gray-50 text-sm`}>
+            users!.map((user) => (
+              <TableRow key={user.id} className={`hover:bg-gray-50 text-sm`}>
                 <TableCell>
                   <DropdownMenu
-                    open={openMenuId === article.id}
+                    open={openMenuId === user.id}
                     onOpenChange={(open) =>
-                      open ? setOpenMenuId(article.id) : setOpenMenuId(null)
+                      open ? setOpenMenuId(user.id) : setOpenMenuId(null)
                     }
                   >
                     <DropdownMenuTrigger asChild>
@@ -171,18 +170,7 @@ export function ArticlesDataTable() {
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() =>
-                          router.push(`/dashboard/articles/${article.slug}`)
-                        }
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        Detail
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() =>
-                          router.push(
-                            `/dashboard/articles/${article.slug}/edit`
-                          )
+                          router.push(`/dashboard/users/${user.id}/edit`)
                         }
                       >
                         Edit
@@ -209,7 +197,7 @@ export function ArticlesDataTable() {
                           <AlertDialogFooter>
                             <AlertDialogCancel>Batal</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() => handleDeleteArticle(article.slug)}
+                              onClick={() => handleDeleteUser(user.id)}
                               className="bg-red-600 hover:bg-red-700"
                             >
                               Ya, Hapus
@@ -221,29 +209,12 @@ export function ArticlesDataTable() {
                   </DropdownMenu>
                 </TableCell>
                 <TableCell className="hidden font-medium sm:table-cell">
-                  {article.id}
+                  {user.username}
                 </TableCell>
-                <TableCell className="font-medium max-w-xs truncate">
-                  {article.title}
-                </TableCell>
-                <TableCell>{article.author}</TableCell>
-                <TableCell>{article.category}</TableCell>
-                <TableCell>
-                  <Badge
-                    className="flex items-center justify-center gap-2"
-                    variant={article.published ? "default" : "secondary"}
-                  >
-                    {article.published ? "Dipublikasi" : "Draft"}
-                    {!article.published && (
-                      <div className="w-1 h-1 bg-green-400 rounded-full animate-ping"></div>
-                    )}
-                  </Badge>
-                </TableCell>
-                <TableCell className="hidden sm:table-cell">
-                  {new Date(article.created_at).toLocaleDateString("id-ID")}
-                </TableCell>
-                <TableCell className="hidden sm:table-cell">
-                  {new Date(article.updated_at).toLocaleDateString("id-ID")}
+                <TableCell className="flex gap-1 h-full flex-wrap">
+                  {user.roles.map((role) => (
+                    <Badge key={role}>{role}</Badge>
+                  ))}
                 </TableCell>
               </TableRow>
             ))
