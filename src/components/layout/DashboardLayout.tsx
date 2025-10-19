@@ -14,6 +14,7 @@ import {
 } from "../ui/dropdown-menu";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { LogOut } from "lucide-react";
+import Image from "next/image";
 
 const quickSand = Quicksand({
   subsets: ["latin"],
@@ -53,15 +54,40 @@ function DynamicHeader({ toggleSidebar }: { toggleSidebar: () => void }) {
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="rounded-full px-3 py-4 text-sm bg-gray-800 text-white uppercase">
-            {user?.username.charAt(0)}
+          <Button
+            className="rounded-full bg-gray-800 text-white uppercase w-12 h-12 p-0"
+            asChild
+          >
+            {user?.image_url ? (
+              <Image
+                src={user?.image_url ?? ""}
+                alt={user?.username ?? ""}
+                width={32}
+                height={32}
+                className="rounded-full object-cover border-2 border-gray-400"
+              />
+            ) : (
+              <div className="flex items-center justify-center text-sm bg-gray-800 text-white">
+                {user?.username.charAt(0)}
+              </div>
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 px-2">
           <DropdownMenuItem className="flex items-center justify-start">
             <div className="w-12 flex flex-col items-center justify-center">
-              <div className="rounded-full flex items-center justify-center px-4 py-3 text-sm bg-gray-800 text-white uppercase">
-                <span>{user?.username.charAt(0)}</span>
+              <div className="rounded-full flex items-center justify-center w-8 p-0 h-8 text-sm bg-gray-800 text-white uppercase">
+                {user?.image_url ? (
+                  <Image
+                    src={user?.image_url ?? ""}
+                    alt={user?.username ?? ""}
+                    width={32}
+                    height={32}
+                    className="rounded-full object-cover border-2 border-gray-400"
+                  />
+                ) : (
+                  <span>{user?.username.charAt(0)}</span>
+                )}
               </div>
             </div>
             <div className="flex flex-col justify-center items-start">

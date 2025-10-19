@@ -14,6 +14,7 @@ import {
   CalendarRange,
   Newspaper,
   User,
+  HomeIcon,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,6 +22,7 @@ import Image from "next/image";
 import { useAuth } from "@/features/auth/context/AuthContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { close } from "fs";
 
 interface NavItem {
   name: keyof typeof iconMap;
@@ -29,6 +31,7 @@ interface NavItem {
 }
 
 const iconMap = {
+  Dashboard: <HomeIcon size={18} />,
   Roles: <Shield size={18} />,
   Personil: <Users size={18} />,
   "Kepala Sekolah": <GraduationCap size={18} />,
@@ -293,6 +296,18 @@ const Sidebar = ({
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-3">
+        <NavItemButton
+          item={{
+            name: "Dashboard",
+            path: "/dashboard",
+          }}
+          isActive={pathname === "/dashboard"}
+          index={0}
+          onClick={() => {
+            closeSidebar();
+            router.push("/dashboard");
+          }}
+        />
         {isAccessible.map((group) => (
           <SidebarGroup
             key={group.label}
