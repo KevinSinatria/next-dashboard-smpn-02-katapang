@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev --https": "cross-env NODE_EXTRA_CA_CERTS=\"C:/Users/Kevin/AppData/Local/mkcert/rootCA.pem\" next dev --turbopack --experimental-https",
+    "dev:https": "cross-env NODE_EXTRA_CA_CERTS=\"/home/kevin-sinatria/.local/share/mkcert/rootCA.pem\"  next dev --turbopack --experimental-https",
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
