@@ -49,15 +49,13 @@ export function ArticleCategoryForm({
   const isEditMode = !!initialData;
   const isReadOnly = !!isEditMode && readOnly;
 
-  // useEffect(() => {
-  //   if (isEditMode) {
-  //     form.reset(initialData!);
-  //   } else {
-  //     form.reset({
-  //       name: "",
-  //     });
-  //   }
-  // }, [form, initialData, isEditMode]);
+  useEffect(() => {
+    if (isEditMode) {
+      form.setValue("name", initialData!.name);
+    } else {
+      form.setValue("name", "");
+    }
+  }, [form, initialData, isEditMode]);
 
   const onSubmit = async (data: ArticleCategoryFormType) => {
     try {

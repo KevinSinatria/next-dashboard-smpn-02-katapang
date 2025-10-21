@@ -5,19 +5,32 @@ import { PersonnelForm } from "@/features/personnels/components/PersonnelForm";
 import { PersonnelDetailType } from "@/features/personnels/types";
 import { apiClient, apiClientAsServer } from "@/lib/apiClient";
 import { NextApiRequest } from "next";
-import { ReactElement } from "react";
+import { useRouter } from "next/router";
+import { ReactElement, useEffect, useState } from "react";
 
-interface PersonnelDetailPageProps {
-  personnel: PersonnelDetailType;
-}
-
-export default function PersonnelDetailPage({
-  personnel,
-}: PersonnelDetailPageProps) {
+export default function PersonnelDetailPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [personnel, setPersonnel] = useState<PersonnelDetailType>();
   const breadcrumbItems = [
     { label: "Personil", href: "/dashboard/personnels" },
-    { label: `Detail: ${personnel.name}` },
+    { label: `Detail: ${personnel?.name}` },
   ];
+
+  const fetchPersonnelDetails = async () => {
+    try {
+      const response = await apiClient.get(`/personnel/${id}`);
+      setPersonnel(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchPersonnelDetails();
+    }
+  }, [id]);
 
   return (
     <ProtectedPage>
@@ -29,39 +42,39 @@ export default function PersonnelDetailPage({
   );
 }
 
-export async function getServerSideProps(context: {
-  params: { id: string };
-  req: NextApiRequest;
-}) {
-  const { id } = context.params;
-  const { req } = context;
+// export async function getServerSideProps(context: {
+//   params: { id: string };
+//   req: NextApiRequest;
+// }) {
+//   const { id } = context.params;
+//   const { req } = context;
 
-  const cookie = req.headers.cookie;
+//   const cookie = req.headers.cookie;
 
-  if (!cookie) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
+//   if (!cookie) {
+//     return {
+//       redirect: {
+//         destination: "/login",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  try {
-    const response = await apiClientAsServer.get(`/personnel/${id}`, {
-      headers: {
-        Cookie: cookie,
-      },
-    });
-    return {
-      props: {
-        personnel: response.data.data,
-      },
-    };
-  } catch {
-    return { notFound: true };
-  }
-}
+//   try {
+//     const response = await apiClientAsServer.get(`/personnel/${id}`, {
+//       headers: {
+//         Cookie: cookie,
+//       },
+//     });
+//     return {
+//       props: {
+//         personnel: response.data.data,
+//       },
+//     };
+//   } catch {
+//     return { notFound: true };
+//   }
+// }
 
 PersonnelDetailPage.getLayout = function getLayout(page: ReactElement) {
   return <DashboardLayout>{page}</DashboardLayout>;
