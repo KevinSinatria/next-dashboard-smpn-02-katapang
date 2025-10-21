@@ -10,7 +10,9 @@ import { ReactElement, useEffect, useState } from "react";
 export default function EditHeadmasterPage() {
   const router = useRouter();
   const { id } = router.query;
-  const [headmaster, setHeadmaster] = useState<HeadmasterDetailType | null>(null);
+  const [headmaster, setHeadmaster] = useState<HeadmasterDetailType | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,7 +27,7 @@ export default function EditHeadmasterPage() {
       setHeadmaster(response.data.data);
     } catch (error) {
       console.error(error);
-      router.push('/404');
+      router.push("/404");
     } finally {
       setLoading(false);
     }
@@ -55,9 +57,5 @@ export default function EditHeadmasterPage() {
 }
 
 EditHeadmasterPage.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <DashboardLayout>
-      {page}
-    </DashboardLayout>
-  );
+  return <DashboardLayout>{page}</DashboardLayout>;
 };

@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { PersonnelDetailType } from "../types";
+import { useEffect } from "react";
 
 const MAX_FILE_SIZE = 4 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = [
@@ -89,6 +90,13 @@ export function PersonnelForm({ initialData, readOnly }: PersonnelFormProps) {
     formState: { isSubmitting },
   } = form;
 
+  useEffect(() => {
+    if (initialData) {
+      form.setValue("name", initialData.name);
+      form.setValue("active", initialData.active);
+    }
+  }, [initialData, form]);
+
   const onSubmit = async (data: PersonnelTypeForm) => {
     const formData = new FormData();
     formData.append("name", data.name);
@@ -133,7 +141,11 @@ export function PersonnelForm({ initialData, readOnly }: PersonnelFormProps) {
     <Card>
       <CardHeader>
         <CardTitle>
-          {isEditMode && !isReadOnly ? "Edit Personil" : isReadOnly ? "Detail Personil" : "Tambah Personil"}
+          {isEditMode && !isReadOnly
+            ? "Edit Personil"
+            : isReadOnly
+            ? "Detail Personil"
+            : "Tambah Personil"}
         </CardTitle>
       </CardHeader>
       <CardContent>
