@@ -57,7 +57,7 @@ export function LoginForm() {
         toast.success(`Berhasil masuk dengan username ${user.username}`);
         setIsLoading((prev: boolean) => !prev);
         if (!isLoading) {
-          router.push("/dashboard/roles");
+          router.push("/dashboard");
         }
       }
     } catch (error) {

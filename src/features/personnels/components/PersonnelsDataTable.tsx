@@ -138,7 +138,7 @@ export function PersonnelsDataTable() {
           !searchTerm ? (
             <TableRow className="text-sm">
               <TableCell colSpan={12} className="text-center h-24">
-                Tidak ada data roles.
+                Tidak ada data personil.
               </TableCell>
             </TableRow>
           ) : personnels &&
@@ -177,9 +177,7 @@ export function PersonnelsDataTable() {
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() =>
-                          router.push(
-                            `/dashboard/personnels/${personnel.id}`
-                          )
+                          router.push(`/dashboard/personnels/${personnel.id}`)
                         }
                       >
                         Lihat Detail

@@ -5,7 +5,7 @@
   "scripts": {
     "dev:https": "cross-env NODE_EXTRA_CA_CERTS=\"/home/kevin-sinatria/.local/share/mkcert/rootCA.pem\"  next dev --turbopack --experimental-https",
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -22,6 +22,7 @@
     "@floating-ui/react": "^0.27.16",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.15",
+    "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-label": "^2.1.7",

@@ -245,15 +245,10 @@ function RoleFormDialog({
   );
 }
 
-export default function EditPersonnelPage({
-  personnel: initialPersonnel,
-}: {
-  personnel: PersonnelDetailType;
-}) {
+export default function EditPersonnelPage() {
   const router = useRouter();
   const { id } = router.query;
-  const [personnel, setPersonnel] =
-    useState<PersonnelDetailType>(initialPersonnel);
+  const [personnel, setPersonnel] = useState<PersonnelDetailType>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingRole, setEditingRole] = useState<RolePersonnelType | null>(
     null
@@ -273,6 +268,12 @@ export default function EditPersonnelPage({
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (id) {
+      fetchPersonnelDetails();
+    }
+  }, [id]);
 
   const handleAddNewRole = () => {
     setEditingRole(null);
@@ -397,62 +398,6 @@ export default function EditPersonnelPage({
       />
     </ProtectedPage>
   );
-}
-
-export async function getServerSideProps(context: {
-  params: { id: string };
-  req: NextApiRequest;
-}) {
-  const { id } = context.params;
-  const { req } = context;
-
-  const cookie = req.headers.cookie;
-
-  if (!cookie) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  try {
-    const response = await apiClientAsServer.get(`/personnel/${id}`, {
-      headers: {
-        Cookie: cookie,
-      },
-    });
-
-    console.log("Response data:", response.data);
-
-    return {
-      props: {
-        personnel: response.data.data,
-      },
-    };
-  } catch (error) {
-    console.error(error);
-    if (error instanceof AxiosError) {
-      const status = error.response?.status;
-
-      if (status === 404) {
-        return {
-          notFound: true,
-        };
-      }
-
-      if (status === 401 || status === 403) {
-        return {
-          redirect: {
-            destination: "/login",
-            permanent: false,
-          },
-        };
-      }
-    }
-    return { notFound: true };
-  }
 }
 
 EditPersonnelPage.getLayout = function getLayout(page: ReactElement) {
