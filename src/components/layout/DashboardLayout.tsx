@@ -13,8 +13,9 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
-import { LogOut } from "lucide-react";
+import { BookOpenText, LogOut } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const quickSand = Quicksand({
   subsets: ["latin"],
@@ -96,6 +97,12 @@ function DynamicHeader({ toggleSidebar }: { toggleSidebar: () => void }) {
             </div>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href={"https://docs.smpn2katapang.sch.id"}>
+              <BookOpenText />
+              Panduan Penggunaan
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={logout} variant="destructive">
             <LogOut />
             Keluar
