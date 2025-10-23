@@ -25,13 +25,15 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArticleDetailType } from "../types";
 import { useAuth } from "@/features/auth/context/AuthContext";
 import { useArticleCategories } from "@/features/article-categories/hooks/useArticleCategories";
 import { ImageDropzone } from "@/components/common/ImageDropzone";
 import { Loader2 } from "lucide-react";
 import { OutputData } from "@editorjs/editorjs";
+import { ArticleCategoryType } from "@/features/article-categories/types";
+import { set } from "date-fns";
 
 const EditorComponent = dynamic(
   () =>
@@ -129,6 +131,8 @@ export function ArticleForm({ initialData, readOnly }: ArticleFormProps) {
   const isEditMode = !!initialData;
   const isReadOnly = readOnly && !!initialData;
   const { user } = useAuth();
+  const [categories, setCategories] = useState<ArticleCategoryType[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
   console.log(initialData);
 
@@ -146,8 +150,24 @@ export function ArticleForm({ initialData, readOnly }: ArticleFormProps) {
   const {
     formState: { isSubmitting },
   } = form;
-  const { articleCategories: categories, isLoading: isLoadingCategories } =
-    useArticleCategories();
+
+  const fetchArticleCategories = async () => {
+    try {
+      const articleCategories = await apiClient.get("/article-categories");
+      setCategories(articleCategories.data.data);
+      setIsLoadingCategories(false);
+    } catch (error) {
+      console.error("Error fetching article categories:", error);
+      toast.error("Gagal memuat kategori artikel");
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    if (!categories.length) {
+      fetchArticleCategories();
+    }
+  }, []);
 
   const onSubmit = async (data: ArticleTypeForm) => {
     console.log(data);
