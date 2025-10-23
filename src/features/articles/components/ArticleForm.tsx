@@ -158,7 +158,6 @@ export function ArticleForm({ initialData, readOnly }: ArticleFormProps) {
       setIsLoadingCategories(false);
     } catch (error) {
       console.error("Error fetching article categories:", error);
-      toast.error("Gagal memuat kategori artikel");
       throw error;
     }
   };
