@@ -36,6 +36,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import Image from "next/image";
+import { Switch } from "@/components/ui/switch";
+import { PersonnelType } from "../types";
 
 export function PersonnelsDataTable() {
   const [page, setPage] = useState(1);
@@ -71,6 +73,32 @@ export function PersonnelsDataTable() {
     } catch (error) {
       console.log(error);
       toast.error("Gagal menghapus personnel");
+    }
+  };
+
+  const handleTogglePublished = async (personnel: PersonnelType) => {
+    const nextPublished = !personnel.published;
+    try {
+      const formData = new FormData();
+      formData.append("name", personnel.name);
+      formData.append("active", String(personnel.active));
+      formData.append("published", String(nextPublished));
+
+      await apiClient.put(`/personnel/${personnel.id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      mutate();
+      toast.success(
+        nextPublished
+          ? "Personnel akan ditampilkan di website"
+          : "Personnel disembunyikan dari website"
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal mengubah status tampil");
     }
   };
 
@@ -127,6 +155,9 @@ export function PersonnelsDataTable() {
             <TableHead className="font-semibold">Nama</TableHead>
             <TableHead className="font-semibold">Foto Profil</TableHead>
             <TableHead className="font-semibold">Status Aktif</TableHead>
+            <TableHead className="font-semibold">
+              Tampil di Website
+            </TableHead>
             <TableHead className="font-semibold">Dibuat Pada</TableHead>
             <TableHead className="font-semibold">Diperbarui Pada</TableHead>
           </TableRow>
@@ -248,6 +279,13 @@ export function PersonnelsDataTable() {
                   >
                     {personnel.active ? "Aktif" : "Tidak Aktif"}
                   </span>
+                </TableCell>
+                <TableCell>
+                  <Switch
+                    checked={personnel.published}
+                    onCheckedChange={() => handleTogglePublished(personnel)}
+                    aria-label="Toggle tampil di website"
+                  />
                 </TableCell>
                 <TableCell>
                   {new Date(personnel.created_at).toLocaleDateString()}
