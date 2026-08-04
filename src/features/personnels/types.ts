@@ -3,6 +3,7 @@ export interface PersonnelType {
   name: string;
   image_url: string;
   active: boolean;
+  published: boolean;
   created_at: string;
   updated_at: string;
 }
