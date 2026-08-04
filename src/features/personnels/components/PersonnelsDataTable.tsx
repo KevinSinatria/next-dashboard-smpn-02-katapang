@@ -78,19 +78,33 @@ export function PersonnelsDataTable() {
 
   const handleTogglePublished = async (personnel: PersonnelType) => {
     const nextPublished = !personnel.published;
+
+    if (!personnels || !meta) return;
+
+    const optimisticData = {
+      data: personnels.map((p) =>
+        p.id === personnel.id ? { ...p, published: nextPublished } : p
+      ),
+      meta,
+    };
+
+    const formData = new FormData();
+    formData.append("name", personnel.name);
+    formData.append("active", String(personnel.active));
+    formData.append("published", String(nextPublished));
+
     try {
-      const formData = new FormData();
-      formData.append("name", personnel.name);
-      formData.append("active", String(personnel.active));
-      formData.append("published", String(nextPublished));
+      await mutate(
+        apiClient
+          .put(`/personnel/${personnel.id}`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then(() => optimisticData),
+        { optimisticData, rollbackOnError: true }
+      );
 
-      await apiClient.put(`/personnel/${personnel.id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      mutate();
       toast.success(
         nextPublished
           ? "Personnel akan ditampilkan di website"
