@@ -32,6 +32,7 @@ const ACCEPTED_IMAGE_TYPES = [
 const baseSchema = z.object({
   name: z.string().min(1, { message: "Nama wajib diisi." }),
   active: z.boolean(),
+  published: z.boolean(),
 });
 
 const createPersonnelSchema = baseSchema.extend({
@@ -83,6 +84,7 @@ export function PersonnelForm({ initialData, readOnly }: PersonnelFormProps) {
       name: initialData?.name || "",
       image: undefined,
       active: initialData?.active ?? true,
+      published: initialData?.published ?? true,
     },
   });
 
@@ -94,6 +96,7 @@ export function PersonnelForm({ initialData, readOnly }: PersonnelFormProps) {
     if (initialData) {
       form.setValue("name", initialData.name);
       form.setValue("active", initialData.active);
+      form.setValue("published", initialData.published);
     }
   }, [initialData, form]);
 
@@ -101,6 +104,7 @@ export function PersonnelForm({ initialData, readOnly }: PersonnelFormProps) {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("active", String(data.active));
+    formData.append("published", String(data.published));
 
     if (data.image) {
       formData.append("image", data.image);
@@ -191,9 +195,31 @@ export function PersonnelForm({ initialData, readOnly }: PersonnelFormProps) {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Status Aktif</FormLabel>
+                    <FormLabel className="text-base">Status Akun</FormLabel>
                     <FormDescription>
-                      Jika aktif, personnel akan ditampilkan di website.
+                      Jika tidak aktif, akun tidak dapat digunakan untuk login.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isReadOnly || isSubmitting}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="published"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">Tampil di Website</FormLabel>
+                    <FormDescription>
+                      Jika aktif, personnel akan ditampilkan di halaman publik
+                      section Staff Sekolah.
                     </FormDescription>
                   </div>
                   <FormControl>
